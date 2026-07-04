@@ -1,0 +1,6 @@
+# Foundry build artifacts
+/out/
+/cache/
+
+# Deployment broadcast logs (contain private key references and tx data)
+/broadcast/

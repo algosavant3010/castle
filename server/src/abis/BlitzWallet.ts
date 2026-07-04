@@ -1,0 +1,16 @@
+export const BlitzWalletABI = [
+  { type: "constructor", inputs: [{ name: "_owner", type: "address" }], stateMutability: "nonpayable" },
+  { type: "receive", stateMutability: "payable" },
+  { type: "function", name: "owner", inputs: [], outputs: [{ name: "", type: "address" }], stateMutability: "view" },
+  { type: "function", name: "registerSessionKey", inputs: [{ name: "key", type: "address" }, { name: "expiry", type: "uint256" }, { name: "dailyCap", type: "uint256" }, { name: "allowedTarget", type: "address" }, { name: "allowedFns", type: "bytes4[]" }], outputs: [], stateMutability: "nonpayable" },
+  { type: "function", name: "freezeAgent", inputs: [], outputs: [], stateMutability: "nonpayable" },
+  { type: "function", name: "emergencyWithdraw", inputs: [{ name: "to", type: "address" }], outputs: [], stateMutability: "nonpayable" },
+  { type: "function", name: "executeAsAgent", inputs: [{ name: "target", type: "address" }, { name: "value", type: "uint256" }, { name: "data", type: "bytes" }], outputs: [{ name: "", type: "bytes" }], stateMutability: "nonpayable" },
+  { type: "function", name: "getActiveKeys", inputs: [], outputs: [{ name: "", type: "address[]" }], stateMutability: "view" },
+  { type: "function", name: "getSessionPolicy", inputs: [{ name: "key", type: "address" }], outputs: [{ name: "expiry", type: "uint256" }, { name: "dailyCap", type: "uint256" }, { name: "spentToday", type: "uint256" }, { name: "windowStart", type: "uint256" }, { name: "allowedTarget", type: "address" }, { name: "allowedFns", type: "bytes4[]" }, { name: "active", type: "bool" }], stateMutability: "view" },
+  { type: "function", name: "getActiveKeyCount", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+  { type: "event", name: "SessionKeyRegistered", inputs: [{ name: "key", type: "address", indexed: true }, { name: "expiry", type: "uint256", indexed: false }] },
+  { type: "event", name: "AgentFrozen", inputs: [{ name: "keysRevoked", type: "uint256", indexed: false }] },
+  { type: "event", name: "EmergencyWithdrawal", inputs: [{ name: "to", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },
+  { type: "event", name: "AgentExecution", inputs: [{ name: "key", type: "address", indexed: true }, { name: "target", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }, { name: "selector", type: "bytes4", indexed: false }] },
+] as const;

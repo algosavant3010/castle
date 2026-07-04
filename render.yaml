@@ -1,0 +1,48 @@
+# Render Blueprint — deploy the Express backend as a web service
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: blitz-server
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    buildFilter:
+      paths:
+        - server/**
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: TRUST_PROXY_HOPS
+        value: "1"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: ENCRYPTION_MASTER_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_WEBHOOK_SECRET
+        sync: false
+      - key: ADMIN_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: PUBLIC_SERVER_URL
+        sync: false
+      - key: MONAD_RPC
+        value: https://testnet-rpc.monad.xyz
+      - key: FACTORY_ADDRESS
+        sync: false
+      - key: ESCROW_ADDRESS
+        sync: false
+      - key: PAYMENT_ROUTER_ADDRESS
+        sync: false
+      - key: APPROVALS_FAIL_CLOSED
+        value: "true"
+    healthCheckPath: /health

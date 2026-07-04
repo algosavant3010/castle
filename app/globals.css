@@ -1,0 +1,742 @@
+@import "tailwindcss";
+
+/*
+  Blitz design tokens - obsidian ether.
+  Dark only. One accent (Blitz Violet). Smooth rounded glassmorphism.
+  Never hard-code raw hex or durations in components; consume these tokens.
+*/
+
+:root {
+  /* surfaces (dark only) */
+  --bg: #08080a;
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-2: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+
+  /* text */
+  --text: #f4f4f5;
+  --text-muted: #8a8a93;
+  --text-faint: #6b6b77;
+
+  /* accent (single, locked) */
+  --accent: #836ef9;
+  --accent-hover: #9d8bff;
+  --accent-press: #5b45d6;
+  --accent-soft: rgba(131, 110, 249, 0.12);
+
+  /* semantic (state only) */
+  --safe: #34d399;
+  --danger: #fb6a6a;
+  --warning: #f5b544;
+
+  /* radius - smooth rounded */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 24px;
+  --r-full: 9999px;
+
+  /* motion - easing (Emil Kowalski curves) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* motion - duration */
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 520ms;
+  --stagger: 50ms;
+}
+
+/*
+  Map tokens to Tailwind theme utilities.
+*/
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-press: var(--accent-press);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-safe: var(--safe);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-full: var(--r-full);
+}
+
+html {
+  color-scheme: dark;
+  background: var(--bg);
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  background: #050505;
+  color: var(--text);
+  font-family: var(--font-geist-sans), Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ─── Animated Background — Magic Grid ─────────────────── */
+
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: #050505;
+  /* Subtle dot mesh pattern for depth */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Grid lines layer */
+.app-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(131, 110, 249, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(131, 110, 249, 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 72%);
+  animation: grid-fade 12s ease-in-out infinite;
+}
+
+/* Accent glow layer */
+.app-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 25% 25%, rgba(131, 110, 249, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 75% 70%, rgba(88, 50, 200, 0.04) 0%, transparent 70%);
+  animation: bg-drift 25s ease-in-out infinite;
+}
+
+@keyframes grid-fade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes bg-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(2%, -3%) rotate(0.5deg); }
+  50% { transform: translate(-1%, 2%) rotate(-0.3deg); }
+  75% { transform: translate(-2%, -1%) rotate(0.2deg); }
+}
+
+/* ─── Glassmorphism Cards ──────────────────────────────── */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--r-lg);
+  transition:
+    transform 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    border-color 200ms ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(131, 110, 249, 0.06);
+  transform: translateY(-1px);
+}
+
+.glass-card-interactive {
+  cursor: pointer;
+}
+
+.glass-card-interactive:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Strong glass for modals/popovers */
+.glass-strong {
+  background: rgba(12, 12, 18, 0.88);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-xl);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Buttons ──────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--r-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  transition:
+    transform 160ms var(--ease-out),
+    background 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  box-shadow: 0 2px 12px rgba(131, 110, 249, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 20px rgba(131, 110, 249, 0.35);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-danger {
+  background: rgba(251, 106, 106, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(251, 106, 106, 0.2);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(251, 106, 106, 0.18);
+  border-color: rgba(251, 106, 106, 0.35);
+}
+
+/* ─── Action Buttons (shine + press) ──────────────────── */
+
+.action-btn {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 160ms var(--ease-out),
+    background 200ms ease,
+    box-shadow 200ms ease,
+    border-color 200ms ease;
+}
+
+/* Shine sweep on hover */
+.action-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 55%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0s;
+  pointer-events: none;
+}
+
+.action-btn:hover:not(:disabled)::before {
+  transform: translateX(120%);
+  transition: transform 600ms var(--ease-out-expo);
+}
+
+/* Press effect: scale + glow pulse */
+.action-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.action-btn--accent:active:not(:disabled) {
+  box-shadow: 0 0 12px rgba(131, 110, 249, 0.4), inset 0 0 4px rgba(131, 110, 249, 0.15);
+}
+
+.action-btn--danger:active:not(:disabled) {
+  box-shadow: 0 0 12px rgba(251, 106, 106, 0.35), inset 0 0 4px rgba(251, 106, 106, 0.1);
+}
+
+.action-btn--default:active:not(:disabled) {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.08), inset 0 0 4px rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Typography & Links ───────────────────────────────── */
+
+.font-mono,
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-geist-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+a.link-accent {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+a.link-accent:hover {
+  color: var(--accent-hover);
+}
+
+/* ─── Focus & Selection ────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid rgba(131, 110, 249, 0.5);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* ─── Reduced Motion ───────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .app-bg::before,
+  .app-bg::after {
+    animation: none !important;
+  }
+}
+
+/* ─── Keyframes ────────────────────────────────────────── */
+
+@theme inline {
+  --animate-star-movement-bottom: star-movement-bottom linear infinite alternate;
+  --animate-star-movement-top: star-movement-top linear infinite alternate;
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--duration, 45s) linear infinite;
+  --animate-glow-pulse: glow-pulse 4s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes star-movement-bottom {
+  0% { transform: translate(0%, 0%); opacity: 1; }
+  100% { transform: translate(-100%, 0%); opacity: 0; }
+}
+
+@keyframes star-movement-top {
+  0% { transform: translate(0%, 0%); opacity: 1; }
+  100% { transform: translate(100%, 0%); opacity: 0; }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% - 4rem)); }
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(calc(-100% - 4rem)); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); filter: blur(2px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+/* ─── Hide number input spinners ───────────────────────── */
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ─── Custom Scrollbar ─────────────────────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(131, 110, 249, 0.2) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(131, 110, 249, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(131, 110, 249, 0.4);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ─── Status chips ─────────────────────────────────────── */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--r-full);
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+/* ─── View Transitions ─────────────────────────────────── */
+
+/*
+  Z-INDEX SCALE (project-wide reference)
+  ─────────────────────────────────────────
+  -1    Background (app-bg)
+   0    Content / main area (default)
+  50    Topbar
+ 100    Modals & dialogs (fixed overlays)
+ 900    Nav menu wrapper (pointer-events: none overlay)
+ 910    Nav prelayers (staggered slabs)
+ 920    Nav panel (slide-out menu)
+ 950    Nav toggle button (ALWAYS on top)
+  ─────────────────────────────────────────
+*/
+
+/* Durations for transition phases */
+:root {
+  --vt-exit-duration: 150ms;
+  --vt-enter-duration: 280ms;
+  --vt-slide-offset: 50px;
+}
+
+/* --- Directional navigation slides --- */
+::view-transition-old(.nav-forward) {
+  animation:
+    var(--vt-exit-duration) var(--ease-out) both vt-fade-out,
+    350ms var(--ease-in-out) both vt-slide-left-out;
+}
+::view-transition-new(.nav-forward) {
+  animation:
+    var(--vt-enter-duration) var(--ease-out-expo) var(--vt-exit-duration) both vt-fade-in,
+    400ms var(--ease-out-expo) both vt-slide-right-in;
+}
+
+::view-transition-old(.nav-back) {
+  animation:
+    var(--vt-exit-duration) var(--ease-out) both vt-fade-out,
+    350ms var(--ease-in-out) both vt-slide-right-out;
+}
+::view-transition-new(.nav-back) {
+  animation:
+    var(--vt-enter-duration) var(--ease-out-expo) var(--vt-exit-duration) both vt-fade-in,
+    400ms var(--ease-out-expo) both vt-slide-left-in;
+}
+
+/* --- Page enter/exit (default crossfade with scale + blur) --- */
+::view-transition-old(.page-exit) {
+  animation: var(--vt-exit-duration) var(--ease-out) both vt-scale-fade-out;
+}
+::view-transition-new(.page-enter) {
+  animation: var(--vt-enter-duration) var(--ease-out-expo) 80ms both vt-scale-fade-in;
+}
+
+/* --- Suspense loading reveal animations --- */
+::view-transition-old(.loading-exit) {
+  animation: 120ms var(--ease-out) both vt-loading-exit;
+}
+::view-transition-new(.loading-enter) {
+  animation: 320ms var(--ease-out-expo) 100ms both vt-loading-enter;
+}
+
+/* --- Anchored elements (topbar, header) --- */
+::view-transition-group(app-topbar) {
+  animation: none;
+  z-index: 50;
+}
+::view-transition-old(app-topbar) {
+  display: none;
+}
+::view-transition-new(app-topbar) {
+  animation: none;
+}
+
+::view-transition-group(app-nav) {
+  animation: none;
+  z-index: 950;
+}
+::view-transition-old(app-nav) {
+  display: none;
+}
+::view-transition-new(app-nav) {
+  animation: none;
+}
+
+/* ─── View Transition Keyframes ────────────────────────── */
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+@keyframes vt-scale-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes vt-scale-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98) translateY(-4px);
+    filter: blur(3px);
+  }
+}
+
+@keyframes vt-slide-left-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--vt-slide-offset)));
+  }
+}
+
+@keyframes vt-slide-right-in {
+  from {
+    transform: translateX(var(--vt-slide-offset));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes vt-slide-right-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--vt-slide-offset));
+  }
+}
+
+@keyframes vt-slide-left-in {
+  from {
+    transform: translateX(calc(-1 * var(--vt-slide-offset)));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes vt-loading-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    filter: blur(2px);
+  }
+}
+
+@keyframes vt-loading-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ─── Page Loading Skeleton ────────────────────────────── */
+
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    rgba(131, 110, 249, 0.04) 25%,
+    rgba(131, 110, 249, 0.08) 50%,
+    rgba(131, 110, 249, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--r-md);
+}
+
+/* ─── Page Transition Loading Spinner ──────────────────── */
+
+@keyframes orbit-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes orbit-dot-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.loading-orbit {
+  animation: orbit-spin 2s linear infinite;
+}
+
+.loading-orbit-dot {
+  animation: orbit-dot-pulse 1.2s ease-in-out infinite;
+}
+
+/* Reduced motion override for view transitions */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* ─── Mobile Compact Overrides ─────────────────────────── */
+
+@media (max-width: 767px) {
+  /* Tighter spacing on cards and panels */
+  .glass-card {
+    border-radius: var(--r-md);
+  }
+
+  .glass-strong {
+    border-radius: var(--r-lg);
+  }
+
+  /* Compact buttons on mobile */
+  .btn {
+    font-size: 0.8125rem;
+    padding: 0.4375rem 1rem;
+  }
+
+  /* Prevent horizontal overflow */
+  main {
+    overflow-x: hidden;
+  }
+}
