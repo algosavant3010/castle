@@ -16,6 +16,7 @@ import { hideWallet } from "@/lib/hidden-wallets-store";
 import { removeWalletMeta, saveWalletMeta } from "@/lib/wallet-meta-store";
 import { clearWalletActivity } from "@/lib/activity-store";
 import { buildAuthMessage, SERVER_URL } from "@/lib/owner-auth";
+import { useWalletNames } from "@/hooks/useWalletNames";
 import { CopyButton } from "@/components/app/copy-button";
 import Link from "next/link";
 import { CastleLoader } from "@/components/app/castle-loader";
@@ -583,6 +584,7 @@ export default function WalletDetailPage({
   const { data: keys, refetch: refetchKeys } = useActiveKeys(walletAddress as `0x${string}`);
   const { freeze, isPending: isFreezing, isSuccess: freezeSuccess } = useFreeze(walletAddress as `0x${string}`);
   const { revoke, isPending: isRevoking, isSuccess: revokeSuccess, reset: resetRevoke } = useRevokeSession(walletAddress as `0x${string}`);
+  const { getDisplayName } = useWalletNames();
   const {
     withdraw,
     reset: resetWithdraw,
@@ -618,13 +620,12 @@ export default function WalletDetailPage({
 
       {/* Header */}
       <div>
-        <h1 className="text-lg font-semibold text-text">AI Wallet</h1>
+        <h1 className="text-lg font-semibold text-text">{getDisplayName(walletAddress)}</h1>
         <p className="mt-0.5 font-mono text-xs text-muted">{walletAddress}</p>
       </div>
 
       {/* Action Bar */}
       <div className="flex flex-wrap items-center gap-2">
-        <ActionBtn label="Add Funds" onClick={() => window.open(`https://bridge.monad.xyz?to=${walletAddress}`, "_blank")} variant="accent" />
         <ActionBtn label="Withdraw" onClick={() => setShowWithdrawPanel(true)} disabled={!hasBalance} variant="accent" />
         <ActionBtn label="Freeze All" onClick={() => freeze()} disabled={isFreezing || activeKeys.length === 0} variant="danger" />
         <ActionBtn label="Delete" onClick={() => setShowDeleteConfirm(true)} variant="danger" />
