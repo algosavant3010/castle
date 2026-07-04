@@ -420,16 +420,6 @@ export function Hero() {
         />
       </div>
 
-      {/* Subtle grid overlay for depth */}
-      <div
-        className="absolute inset-0 z-[1] opacity-[0.03] motion-reduce:hidden"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
       {/* Content layer */}
       <div className="relative z-10 flex flex-col items-center px-6 pt-32 pb-20 md:px-12 md:pt-40 md:pb-28 w-full max-w-6xl mx-auto">
         {/* Eyebrow badge */}

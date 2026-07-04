@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useActivityFeed, type ActivityEvent } from "@/hooks/useActivityFeed";
+import { useServerActivity, type ServerActivityItem } from "@/hooks/useServerActivity";
 import { type SessionActivity } from "@/lib/activity-store";
 import { useWalletNames } from "@/hooks/useWalletNames";
 import { CONTRACTS } from "@/lib/chain/addresses";
@@ -102,6 +103,56 @@ function LiveEventRow({ event }: { event: ActivityEvent }) {
   );
 }
 
+function ServerTxRow({ tx }: { tx: ServerActivityItem }) {
+  const pending = !tx.executed;
+  const failed = tx.executed && tx.success === false;
+  const label = tx.agentName || `${tx.agentAddress.slice(0, 6)}...${tx.agentAddress.slice(-4)}`;
+  const ts = new Date(tx.createdAt).getTime();
+
+  return (
+    <div className="flex items-center gap-2.5 border-b border-white/[0.03] px-4 py-3 transition-colors last:border-b-0 hover:bg-white/[0.02]">
+      <div
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
+          failed ? "bg-danger/10 text-danger" : pending ? "bg-warning/10 text-warning" : "bg-safe/10 text-safe"
+        }`}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+        </svg>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium text-text truncate">{label}</span>
+          <span className="text-[10px] text-faint font-mono">{tx.functionName}</span>
+          {failed && <span className="text-[9px] font-semibold uppercase text-danger">failed</span>}
+          {pending && <span className="text-[9px] font-semibold uppercase text-warning">pending</span>}
+        </div>
+        <p className="text-[10px] text-muted mt-0.5 truncate">
+          &#x2192; {tx.target.slice(0, 10)}...{tx.target.slice(-4)}
+          {tx.memo ? ` · ${tx.memo}` : ""}
+        </p>
+      </div>
+      <div className="shrink-0 text-right">
+        {tx.valueMon && parseFloat(tx.valueMon) > 0 ? (
+          <span className="font-mono text-xs font-medium text-text">{parseFloat(tx.valueMon).toFixed(4)} MON</span>
+        ) : (
+          <span className="text-[10px] text-faint">0 MON</span>
+        )}
+      </div>
+      <div className="shrink-0 flex items-center gap-2">
+        <span className="w-14 text-right font-mono text-[10px] text-faint">
+          {new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </span>
+        {tx.txHash && (
+          <a href={`${MONAD_TESTNET_EXPLORER}/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer" className="text-[10px] text-accent/50 hover:text-accent">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" /></svg>
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function SessionActivityRow({ activity }: { activity: SessionActivity }) {
   const { getDisplayName } = useWalletNames();
   const name = getDisplayName(activity.sessionKey);
@@ -142,8 +193,20 @@ function SessionActivityRow({ activity }: { activity: SessionActivity }) {
 
 export default function ActivityPage() {
   const { events, sessionLogs } = useActivityFeed();
+  const {
+    transactions: serverTxs,
+    isLoading: serverLoading,
+    needsAuth,
+    sync,
+    error: serverError,
+  } = useServerActivity();
   const [tab, setTab] = useState<Tab>("live");
   const contractsDeployed = CONTRACTS.escrow !== "0x0000000000000000000000000000000000000000";
+
+  // Server-sourced history (parity with Telegram), deduped against live events by tx hash.
+  const liveHashes = new Set(events.map((e) => e.txHash).filter(Boolean));
+  const historyTxs = serverTxs.filter((t) => !t.txHash || !liveHashes.has(t.txHash as `0x${string}`));
+  const hasLiveContent = events.length > 0 || historyTxs.length > 0;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -162,6 +225,28 @@ export default function ActivityPage() {
       {!contractsDeployed && (
         <div className="rounded-xl border border-warning/20 bg-warning/5 p-4">
           <p className="text-sm text-warning">Contracts not deployed. Activity will appear once contracts are live.</p>
+        </div>
+      )}
+
+      {/* Full-history sync prompt — surfaces past agent sends (parity with Telegram). */}
+      {needsAuth && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-accent/20 bg-accent/5 p-4">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-text">Load full history</p>
+            <p className="mt-0.5 text-xs text-muted">
+              The live feed only shows events since you opened the app. Sign once to load past agent transactions.
+            </p>
+          </div>
+          <button onClick={sync} disabled={serverLoading} className="btn btn-primary text-xs shrink-0">
+            {serverLoading ? "Loading..." : "Sync history"}
+          </button>
+        </div>
+      )}
+
+      {serverError && !needsAuth && (
+        <div className="rounded-xl border border-danger/20 bg-danger/5 p-3">
+          <p className="text-xs text-danger">Could not load history: {serverError}</p>
+          <button onClick={sync} className="mt-1.5 text-[11px] text-accent hover:underline">Try again</button>
         </div>
       )}
 
@@ -205,18 +290,32 @@ export default function ActivityPage() {
         >
         <BorderGlow {...GLOW_PROPS}>
           <div className="overflow-hidden">
-            {events.length === 0 ? (
+            {!hasLiveContent ? (
               <div className="px-4 py-14 text-center">
                 <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.04]">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-faint">
                     <path d="M12 8v4l3 3" /><circle cx="12" cy="12" r="10" />
                   </svg>
                 </div>
-                <p className="text-xs text-muted">No live events yet</p>
+                <p className="text-xs text-muted">{serverLoading ? "Loading history..." : "No live events yet"}</p>
                 <p className="text-[10px] text-faint mt-1">Events appear here as agents transact on-chain.</p>
               </div>
             ) : (
-              events.map((event) => <LiveEventRow key={event.id} event={event} />)
+              <>
+                {events.map((event) => <LiveEventRow key={event.id} event={event} />)}
+                {historyTxs.length > 0 && (
+                  <>
+                    {events.length > 0 && (
+                      <div className="px-4 py-1.5 border-b border-white/[0.06] bg-white/[0.01]">
+                        <p className="eyebrow">History</p>
+                      </div>
+                    )}
+                    {historyTxs.map((tx, i) => (
+                      <ServerTxRow key={tx.txHash || `${tx.createdAt}-${i}`} tx={tx} />
+                    ))}
+                  </>
+                )}
+              </>
             )}
           </div>
         </BorderGlow>
