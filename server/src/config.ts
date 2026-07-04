@@ -23,6 +23,10 @@ export const config = {
   encryption: {
     masterKey: process.env.ENCRYPTION_MASTER_KEY || '',
   },
+  gasFunder: {
+    // Dedicated gas funder key. Falls back to DEPLOYER_PRIVATE_KEY if not set.
+    privateKey: (process.env.GAS_FUNDER_KEY || process.env.DEPLOYER_PRIVATE_KEY || '') as `0x${string}`,
+  },
   telegram: {
     botToken: process.env.TELEGRAM_BOT_TOKEN || '',
     // Secret token verified on every inbound webhook call (set on setWebhook).

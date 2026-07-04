@@ -101,32 +101,56 @@ export async function answerCallbackQuery(callbackQueryId: string, text: string)
 
 // --- Alert helpers ---
 
-export async function alertOnSend(chatId: string, data: { agent: string; to: string; amount: string; ip: string; origin: string }) {
+export async function alertOnSend(chatId: string, data: { agent: string; agentName: string; vaultAddress: string; to: string; amount: string; ip: string; origin: string }) {
   await sendTelegramAlert(chatId,
-    `💸 <b>Agent Send Executed</b>\n\nAgent: <code>${data.agent.slice(0, 10)}...</code>\nTo: <code>${data.to}</code>\nAmount: ${data.amount} MON\nIP: <code>${data.ip}</code>\nOrigin: ${data.origin}`
+    `💸 <b>Send Executed</b>\n\n` +
+    `<b>${data.agentName}</b>\n` +
+    `Vault: <code>${data.vaultAddress.slice(0, 10)}...</code>\n\n` +
+    `To: <code>${data.to}</code>\n` +
+    `Amount: <b>${data.amount} MON</b>\n` +
+    `IP: <code>${data.ip}</code> | Origin: ${data.origin}`
   );
 }
 
-export async function alertOnCall(chatId: string, data: { agent: string; target: string; fn: string; value: string; ip: string }) {
+export async function alertOnCall(chatId: string, data: { agent: string; agentName: string; vaultAddress: string; target: string; fn: string; value: string; ip: string }) {
   await sendTelegramAlert(chatId,
-    `📞 <b>Agent Call Executed</b>\n\nAgent: <code>${data.agent.slice(0, 10)}...</code>\nTarget: <code>${data.target.slice(0, 10)}...</code>\nFunction: ${data.fn}\nValue: ${data.value} MON\nIP: <code>${data.ip}</code>`
+    `📞 <b>Contract Call Executed</b>\n\n` +
+    `<b>${data.agentName}</b>\n` +
+    `Vault: <code>${data.vaultAddress.slice(0, 10)}...</code>\n\n` +
+    `Target: <code>${data.target.slice(0, 10)}...</code>\n` +
+    `Function: <b>${data.fn}</b>\n` +
+    `Value: ${data.value} MON\n` +
+    `IP: <code>${data.ip}</code>`
   );
 }
 
-export async function alertBudgetWarning(chatId: string, data: { agent: string; spent: string; cap: string; percent: number }) {
+export async function alertBudgetWarning(chatId: string, data: { agent: string; agentName: string; spent: string; cap: string; percent: number }) {
   await sendTelegramAlert(chatId,
-    `⚠️ <b>Budget ${data.percent}% Used</b>\n\nAgent: <code>${data.agent.slice(0, 10)}...</code>\nSpent: ${data.spent} / ${data.cap} MON`
+    `⚠️ <b>Budget ${data.percent}% Used</b>\n\n` +
+    `<b>${data.agentName}</b>\n` +
+    `Spent: ${data.spent} / ${data.cap} MON\n\n` +
+    `Agent will be blocked when cap is reached.`
   );
 }
 
-export async function alertNewIp(chatId: string, data: { agent: string; ip: string; origin: string }) {
+export async function alertNewIp(chatId: string, data: { agent: string; agentName: string; ip: string; origin: string }) {
   await sendTelegramAlert(chatId,
-    `🆕 <b>New IP Detected</b>\n\nAgent: <code>${data.agent.slice(0, 10)}...</code>\nIP: <code>${data.ip}</code>\nOrigin: ${data.origin}\n\nIf unexpected, freeze the agent immediately.`
+    `🆕 <b>New IP Detected</b>\n\n` +
+    `<b>${data.agentName}</b>\n` +
+    `Agent: <code>${data.agent.slice(0, 10)}...</code>\n\n` +
+    `IP: <code>${data.ip}</code>\n` +
+    `Origin: ${data.origin}\n\n` +
+    `If unexpected, freeze the agent immediately.`
   );
 }
 
-export async function alertPatternDetected(chatId: string, data: { agent: string; pattern: string; count: number }) {
+export async function alertPatternDetected(chatId: string, data: { agent: string; agentName: string; pattern: string; count: number }) {
   await sendTelegramAlert(chatId,
-    `🔴 <b>Repeated Pattern</b>\n\nAgent: <code>${data.agent.slice(0, 10)}...</code>\nPattern: ${data.pattern}\nCount: ${data.count}x in 5 min\n\nRate limited automatically.`
+    `🔴 <b>Repeated Pattern</b>\n\n` +
+    `<b>${data.agentName}</b>\n` +
+    `Agent: <code>${data.agent.slice(0, 10)}...</code>\n\n` +
+    `Pattern: ${data.pattern}\n` +
+    `Count: ${data.count}x in 5 min\n\n` +
+    `Rate limited automatically.`
   );
 }

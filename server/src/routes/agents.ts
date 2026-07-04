@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { isAddress, getAddress } from 'viem';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
 import { ownerAuth } from '../middleware/owner-auth.js';
-import { publicClient } from '../services/chain.js';
+import { publicClient, fundAgentGas } from '../services/chain.js';
 import { supabase } from '../services/supabase.js';
 import { encryptPrivateKey, generateAccessToken, hashToken } from '../services/crypto.js';
 import { CastleWalletABI } from '../abis/CastleWallet.js';
@@ -128,11 +128,18 @@ router.post('/create', ownerAuth('create-agent'), async (req: Request, res: Resp
     }
 
     // accessToken is returned exactly once and never stored in plaintext.
+    // Fund the session key with gas so it can submit transactions.
+    const gasResult = await fundAgentGas(sessionKeyAddress as `0x${string}`);
+    if ('error' in gasResult) {
+      console.warn('[agents/create] Gas funding failed (agent still created):', gasResult.error);
+    }
+
     return res.json({
       sessionKeyAddress,
       accessToken,
       vaultAddress: getAddress(vaultAddress),
       expiresAt,
+      gasFunded: !('error' in gasResult),
     });
   } catch (err) {
     console.error('[agents/create] error:', err instanceof Error ? err.message : err);

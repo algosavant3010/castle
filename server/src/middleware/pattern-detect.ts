@@ -1,5 +1,6 @@
 import { supabase } from '../services/supabase.js';
 import { alertPatternDetected } from '../services/telegram.js';
+import { getAgentName } from '../services/approval.js';
 import { config } from '../config.js';
 
 export interface PatternCheckResult {
@@ -44,8 +45,10 @@ export async function checkSigningPattern(
             .select('telegram_chat_id, notify_on_pattern, telegram_verified')
             .eq('owner_address', ownerAddress.toLowerCase()).single();
           if (notif?.telegram_chat_id && notif?.telegram_verified && notif?.notify_on_pattern) {
+            const agentName = await getAgentName(agentAddress);
             await alertPatternDetected(notif.telegram_chat_id, {
               agent: agentAddress,
+              agentName,
               pattern: `${functionName} on ${target.slice(0, 10)}... for ${valueMon} MON`,
               count: newCount,
             });
