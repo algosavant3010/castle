@@ -182,7 +182,7 @@ function AlertsTab() {
           <div className="space-y-3">
             <div className="rounded-xl bg-white/[0.03] border border-white/[0.04] p-4">
               <p className="text-xs text-muted mb-3">
-                1. Open Telegram and search for <span className="font-mono text-accent">@CastleConnectBot</span><br />
+                1. Open Telegram and search for <span className="font-mono text-accent">@CastleSupportBot</span><br />
                 2. Send <span className="font-mono text-accent">/start</span> to the bot<br />
                 3. Send <span className="font-mono text-accent">/id</span> to get your Chat ID<br />
                 4. Paste it below and verify ownership
