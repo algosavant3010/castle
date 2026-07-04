@@ -92,7 +92,7 @@ export function Partners() {
 
       <div className="relative mx-auto max-w-[1200px] px-6 md:px-12">
         <p className="mb-12 text-center text-[14px] font-medium tracking-wide text-muted/70">
-          Trusted by the Monad ecosystem
+          Integrated with leading protocols
         </p>
       </div>
 

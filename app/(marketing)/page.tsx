@@ -1,7 +1,8 @@
 import { Hero } from "@/components/marketing/hero";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { Partners } from "@/components/marketing/partners";
-import { VideoShowcase } from "@/components/marketing/video-showcase";
+import { Safety } from "@/components/marketing/safety";
+import { SigningFlow } from "@/components/marketing/signing-flow";
 import { WhyMonad } from "@/components/marketing/why-monad";
 
 /**
@@ -15,7 +16,8 @@ export default function MarketingPage() {
       <Hero />
       <Partners />
       <HowItWorks />
-      <VideoShowcase />
+      <SigningFlow />
+      <Safety />
       <WhyMonad />
     </>
   );
