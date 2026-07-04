@@ -22,7 +22,7 @@ export interface SessionActivity {
   status: "confirmed";
 }
 
-const STORAGE_KEY = "blitz_session_activity";
+const STORAGE_KEY = "castle_session_activity";
 
 function getAll(): Record<string, SessionActivity[]> {
   if (typeof window === "undefined") return {};

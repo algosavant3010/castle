@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { CastleIcon } from "@/components/ui/blitz-logo";
+import { CastleIcon } from "@/components/ui/castle-logo";
 import { StatusIcon } from "@/components/app/status-icon";
 import AnimatedContent from "@/components/reactbits/interactions/AnimatedContent";
 import Stepper, { Step } from "@/components/reactbits/interactions/Stepper";

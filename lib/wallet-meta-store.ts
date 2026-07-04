@@ -26,7 +26,7 @@ export interface WalletMeta {
 }
 
 // Keep the same localStorage key for backward compatibility
-const STORAGE_KEY = "blitz_agent_meta";
+const STORAGE_KEY = "castle_agent_meta";
 
 function getAll(): Record<string, WalletMeta> {
   if (typeof window === "undefined") return {};

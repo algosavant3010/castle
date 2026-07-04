@@ -38,7 +38,7 @@ export function decryptPrivateKey(encrypted: string, iv: string): string {
 }
 
 export function generateAccessToken(): string {
-  return `blitz_${randomBytes(32).toString('hex')}`;
+  return `castle_${randomBytes(32).toString('hex')}`;
 }
 
 export function hashToken(token: string): string {

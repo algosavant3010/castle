@@ -38,7 +38,7 @@ export function useActivityFeed() {
     setSessionLogs(getAllSessionActivity());
   }, []);
 
-  // Watch BlitzEscrow events (global marketplace activity)
+  // Watch CastleEscrow events (global marketplace activity)
   useWatchContractEvent({
     address: CONTRACTS.escrow,
     abi: CastleEscrowABI,

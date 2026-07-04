@@ -1,5 +1,5 @@
 /**
- * Shared UI constants for Blitz.
+ * Shared UI constants for Castle.
  * Centralizes BorderGlow props and other reusable styling configs
  * so they aren't duplicated across every page file.
  */

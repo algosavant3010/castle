@@ -1,5 +1,5 @@
 -- ============================================================
--- Blitz: RLS Lockdown (security hardening)
+-- Castle: RLS Lockdown (security hardening)
 -- ============================================================
 -- The frontend reads all product data directly from the chain (via wagmi)
 -- and performs all database writes through the Express server, which uses the

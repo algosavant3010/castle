@@ -1,5 +1,5 @@
 -- ============================================================
--- Blitz: Initial Schema
+-- Castle: Initial Schema
 -- AI Agent Wallet Infrastructure on Monad
 -- ============================================================
 

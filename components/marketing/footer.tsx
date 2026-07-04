@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { CastleIcon } from "@/components/ui/blitz-logo";
+import { CastleIcon } from "@/components/ui/castle-logo";
 import AnimatedContent from "@/components/reactbits/interactions/AnimatedContent";
 
 import ShinyText from "@/components/reactbits/text/ShinyText";

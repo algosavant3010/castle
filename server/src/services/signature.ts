@@ -43,7 +43,7 @@ export async function verifyOwnerAuth(params: {
   if (typeof address !== 'string' || !isAddress(address)) {
     return { ok: false, error: 'Invalid or missing owner address.' };
   }
-  if (typeof message !== 'string' || !message.startsWith('Blitz Security')) {
+  if (typeof message !== 'string' || !message.startsWith('Castle Security')) {
     return { ok: false, error: 'Malformed authentication message.' };
   }
   if (typeof signature !== 'string' || !/^0x[0-9a-fA-F]+$/.test(signature)) {
