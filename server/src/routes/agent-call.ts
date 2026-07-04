@@ -6,7 +6,7 @@ import { checkNewIp } from '../middleware/ip-monitor.js';
 import { checkSigningPattern } from '../middleware/pattern-detect.js';
 import { logRequest } from '../middleware/logger.js';
 import { validateAbi, validateFunctionName } from '../middleware/validate.js';
-import { publicClient, createAgentWalletClient } from '../services/chain.js';
+import { publicClient, createAgentWalletClient, ensureAgentGas } from '../services/chain.js';
 import { supabase } from '../services/supabase.js';
 import { alertOnCall, sendTelegramAlert } from '../services/telegram.js';
 import { needsApproval, requestApproval, getAgentName } from '../services/approval.js';
@@ -121,6 +121,9 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
       ip_address: req.clientMeta?.ip, origin: req.clientMeta?.origin,
     });
 
+    // Gas sponsor: ensure agent has gas before executing
+    await ensureAgentGas(creds.agentAddress as `0x${string}`);
+
     // Execute directly on-chain (policy enforced by CastleWallet contract)
     const walletClient = createAgentWalletClient(creds.privateKey);
     const hash = await walletClient.writeContract({
@@ -140,7 +143,8 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
         .select('telegram_chat_id, notify_on_call, telegram_verified')
         .eq('owner_address', creds.ownerAddress.toLowerCase()).single();
       if (notif?.telegram_chat_id && notif?.telegram_verified && notif?.notify_on_call) {
-        alertOnCall(notif.telegram_chat_id, { agent: creds.agentAddress, target, fn: functionName, value: valueMon, ip: req.clientMeta?.ip || 'unknown' });
+        const agentName = await getAgentName(creds.agentAddress);
+        alertOnCall(notif.telegram_chat_id, { agent: creds.agentAddress, agentName, vaultAddress: creds.vaultAddress, target, fn: functionName, value: valueMon, ip: req.clientMeta?.ip || 'unknown' });
       }
     }
 

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabase } from '../services/supabase.js';
 import { alertNewIp } from '../services/telegram.js';
+import { getAgentName } from '../services/approval.js';
 
 export function ipMonitor(req: Request, _res: Response, next: NextFunction) {
   const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim()
@@ -42,8 +43,9 @@ export async function checkNewIp(req: Request): Promise<void> {
           .single();
 
         if (notification?.telegram_chat_id && notification?.telegram_verified && notification?.notify_on_new_ip) {
+          const agentName = await getAgentName(agent.agentAddress);
           await alertNewIp(notification.telegram_chat_id, {
-            agent: agent.agentAddress, ip: meta.ip, origin: meta.origin,
+            agent: agent.agentAddress, agentName, ip: meta.ip, origin: meta.origin,
           });
         }
       }

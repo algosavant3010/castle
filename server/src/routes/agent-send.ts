@@ -6,7 +6,7 @@ import { checkNewIp } from '../middleware/ip-monitor.js';
 import { checkSigningPattern } from '../middleware/pattern-detect.js';
 import { logRequest } from '../middleware/logger.js';
 import { validateAmount, validateMemo } from '../middleware/validate.js';
-import { publicClient, createAgentWalletClient } from '../services/chain.js';
+import { publicClient, createAgentWalletClient, ensureAgentGas } from '../services/chain.js';
 import { supabase } from '../services/supabase.js';
 import { alertOnSend, alertBudgetWarning } from '../services/telegram.js';
 import { needsApproval, requestApproval, getAgentName } from '../services/approval.js';
@@ -66,6 +66,10 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
   try {
     const value = parseEther(amount);
     const target = config.contracts.paymentRouter;
+
+    // Gas sponsor: ensure agent has gas before executing
+    await ensureAgentGas(creds.agentAddress as `0x${string}`);
+
     const calldata = memo
       ? encodeFunctionData({ abi: CastlePaymentRouterABI, functionName: 'sendWithMemo', args: [to as `0x${string}`, memo] })
       : encodeFunctionData({ abi: CastlePaymentRouterABI, functionName: 'send', args: [to as `0x${string}`] });
@@ -96,7 +100,8 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
         .select('telegram_chat_id, notify_on_send, telegram_verified')
         .eq('owner_address', creds.ownerAddress.toLowerCase()).single();
       if (notif?.telegram_chat_id && notif?.telegram_verified && notif?.notify_on_send) {
-        alertOnSend(notif.telegram_chat_id, { agent: creds.agentAddress, to, amount, ip: req.clientMeta?.ip || 'unknown', origin: req.clientMeta?.origin || 'unknown' });
+        const agentName = await getAgentName(creds.agentAddress);
+        alertOnSend(notif.telegram_chat_id, { agent: creds.agentAddress, agentName, vaultAddress: creds.vaultAddress, to, amount, ip: req.clientMeta?.ip || 'unknown', origin: req.clientMeta?.origin || 'unknown' });
       }
     }
 
@@ -110,7 +115,8 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
           .select('telegram_chat_id, telegram_verified')
           .eq('owner_address', creds.ownerAddress.toLowerCase()).single();
         if (notif?.telegram_chat_id && notif?.telegram_verified) {
-          alertBudgetWarning(notif.telegram_chat_id, { agent: creds.agentAddress, spent: formatEther(spentToday), cap: formatEther(dailyCap), percent });
+          const agentName = await getAgentName(creds.agentAddress);
+          alertBudgetWarning(notif.telegram_chat_id, { agent: creds.agentAddress, agentName, spent: formatEther(spentToday), cap: formatEther(dailyCap), percent });
         }
       }
     }
