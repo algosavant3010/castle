@@ -110,31 +110,37 @@ export default function DashboardPage() {
 
           {/* Metrics */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
-            <BorderGlow {...GLOW_PROPS}>
-              <div className="p-3.5 sm:p-5">
-                <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">Total Balance</p>
-                <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">
-                  <TotalBalanceDisplay wallets={wallets} />
-                </p>
-                <p className="text-[10px] sm:text-xs text-muted mt-0.5">MON</p>
-              </div>
-            </BorderGlow>
+            <Link href="/wallets" className="block">
+              <BorderGlow {...GLOW_PROPS}>
+                <div className="p-3.5 sm:p-5 cursor-pointer transition-transform duration-150 active:scale-[0.98]">
+                  <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">Total Balance</p>
+                  <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">
+                    <TotalBalanceDisplay wallets={wallets} />
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-muted mt-0.5">MON</p>
+                </div>
+              </BorderGlow>
+            </Link>
 
-            <BorderGlow {...GLOW_PROPS}>
-              <div className="p-3.5 sm:p-5">
-                <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">AI Wallets</p>
-                <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">{wallets.length}</p>
-                <p className="text-[10px] sm:text-xs text-muted mt-0.5">deployed</p>
-              </div>
-            </BorderGlow>
+            <Link href="/wallets" className="block">
+              <BorderGlow {...GLOW_PROPS}>
+                <div className="p-3.5 sm:p-5 cursor-pointer transition-transform duration-150 active:scale-[0.98]">
+                  <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">AI Wallets</p>
+                  <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">{wallets.length}</p>
+                  <p className="text-[10px] sm:text-xs text-muted mt-0.5">deployed</p>
+                </div>
+              </BorderGlow>
+            </Link>
 
-            <BorderGlow {...GLOW_PROPS} className="col-span-2 lg:col-span-1">
-              <div className="p-3.5 sm:p-5">
-                <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">Open Tasks</p>
-                <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">{taskCount ? Number(taskCount) : 0}</p>
-                <p className="text-[10px] sm:text-xs text-muted mt-0.5">marketplace</p>
-              </div>
-            </BorderGlow>
+            <Link href="/marketplace" className="block col-span-2 lg:col-span-1">
+              <BorderGlow {...GLOW_PROPS}>
+                <div className="p-3.5 sm:p-5 cursor-pointer transition-transform duration-150 active:scale-[0.98]">
+                  <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">Open Tasks</p>
+                  <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">{taskCount ? Number(taskCount) : 0}</p>
+                  <p className="text-[10px] sm:text-xs text-muted mt-0.5">marketplace</p>
+                </div>
+              </BorderGlow>
+            </Link>
           </div>
 
           {/* Quick actions */}
