@@ -14,6 +14,7 @@ import { clearWalletActivity } from "@/lib/activity-store";
 import { CastleLoader } from "@/components/app/castle-loader";
 import { StatusIcon, type StatusVariant } from "@/components/app/status-icon";
 import { CreateWalletInline } from "@/components/app/create-wallet-inline";
+import { EmptyState } from "@/components/app/empty-state";
 import Link from "next/link";
 import BorderGlow from "@/components/reactbits/interactions/BorderGlow";
 import { GLOW_PROPS } from "@/lib/ui";
@@ -299,22 +300,15 @@ export default function WalletsPage() {
 
       {/* Empty state */}
       {!isLoading && visibleWallets.length === 0 && contractsDeployed && (
-        <BorderGlow {...GLOW_PROPS}>
-          <div className="p-12 text-center">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-medium text-text">No AI wallets yet</h2>
-            <p className="mt-2 text-sm text-muted max-w-sm mx-auto">
-              Deploy your first AI wallet and connect it to any AI chatbot.
-            </p>
-            <button onClick={() => setShowCreateForm(true)} className="btn btn-primary mt-6 inline-flex">
+        <EmptyState
+          title="No AI wallets yet"
+          description="Deploy your first AI wallet and connect it to any AI chatbot."
+          action={
+            <button onClick={() => setShowCreateForm(true)} className="btn btn-primary inline-flex">
               Deploy First Wallet
             </button>
-          </div>
-        </BorderGlow>
+          }
+        />
       )}
     </div>
   );

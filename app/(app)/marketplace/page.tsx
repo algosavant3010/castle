@@ -6,6 +6,7 @@ import { CONTRACTS } from "@/lib/chain/addresses";
 import { MONAD_TESTNET_EXPLORER } from "@/lib/chain/config";
 import { useAccount } from "wagmi";
 import { CastleLoader } from "@/components/app/castle-loader";
+import { EmptyState } from "@/components/app/empty-state";
 import Link from "next/link";
 import BorderGlow from "@/components/reactbits/interactions/BorderGlow";
 
@@ -188,12 +189,15 @@ export default function MarketplacePage() {
       {/* Task list */}
       <div className="space-y-2">
         {count === 0 && contractsDeployed && (
-          <BorderGlow {...GLOW_PROPS}>
-            <div className="flex flex-col items-center justify-center py-14">
-              <p className="text-lg font-medium text-text">No tasks yet</p>
-              <p className="mt-1.5 text-sm text-muted">Create one to get started.</p>
-            </div>
-          </BorderGlow>
+          <EmptyState
+            icon={
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9h18v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9zM3 9l2.45-4.9A2 2 0 017.24 3h9.52a2 2 0 011.79 1.1L21 9" />
+              </svg>
+            }
+            title="No tasks yet"
+            description="Create one to get started."
+          />
         )}
         {Array.from({ length: count }, (_, i) => count - 1 - i).map((taskId) => (
           <TaskCard key={taskId} taskId={taskId} filterStatus={activeTab} />

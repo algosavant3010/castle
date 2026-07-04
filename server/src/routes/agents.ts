@@ -140,4 +140,85 @@ router.post('/create', ownerAuth('create-agent'), async (req: Request, res: Resp
   }
 });
 
+/**
+ * POST /api/agents/activity
+ *
+ * Returns the transaction history for every vault the caller owns, sourced from
+ * the same `transactions` table that drives Telegram alerts. This gives the web
+ * app parity with Telegram (it no longer depends only on live on-chain watchers,
+ * which miss anything that happened while the app was closed).
+ *
+ * Requires an owner signature (purpose "view-activity").
+ */
+router.post('/activity', ownerAuth('view-activity'), async (req: Request, res: Response) => {
+  const owner = req.ownerAddress!;
+
+  try {
+    // 1. Find the owner's agents (and the vaults they belong to).
+    const { data: agents, error: agentsErr } = await supabase
+      .from('agents')
+      .select('session_key_address, vault_address, name')
+      .eq('owner_address', owner);
+
+    if (agentsErr) {
+      console.error('[agents/activity] agents query failed:', agentsErr.message);
+      return res.status(500).json({ error: 'Failed to load agents.' });
+    }
+
+    const vaults = Array.from(
+      new Set((agents || []).map((a) => (a.vault_address as string).toLowerCase()))
+    );
+
+    if (vaults.length === 0) {
+      return res.json({ transactions: [], agents: [] });
+    }
+
+    // Map agent address -> friendly name for display.
+    const agentNames: Record<string, string> = {};
+    for (const a of agents || []) {
+      agentNames[(a.session_key_address as string).toLowerCase()] = (a.name as string) || '';
+    }
+
+    // 2. Pull executed transactions for those vaults, most recent first.
+    const { data: txs, error: txErr } = await supabase
+      .from('transactions')
+      .select('agent_address, vault_address, target, function_name, value_mon, memo, tx_hash, executed, execution_success, block_number, created_at')
+      .in('vault_address', vaults)
+      .order('created_at', { ascending: false })
+      .limit(100);
+
+    if (txErr) {
+      console.error('[agents/activity] transactions query failed:', txErr.message);
+      return res.status(500).json({ error: 'Failed to load transactions.' });
+    }
+
+    const transactions = (txs || []).map((t) => ({
+      agentAddress: t.agent_address as string,
+      agentName: agentNames[(t.agent_address as string)?.toLowerCase()] || null,
+      vaultAddress: t.vault_address as string,
+      target: t.target as string,
+      functionName: t.function_name as string,
+      valueMon: t.value_mon as string,
+      memo: (t.memo as string) || null,
+      txHash: (t.tx_hash as string) || null,
+      executed: Boolean(t.executed),
+      success: t.execution_success === null ? null : Boolean(t.execution_success),
+      blockNumber: t.block_number ? Number(t.block_number) : null,
+      createdAt: t.created_at as string,
+    }));
+
+    return res.json({
+      transactions,
+      agents: (agents || []).map((a) => ({
+        agentAddress: a.session_key_address as string,
+        vaultAddress: a.vault_address as string,
+        name: (a.name as string) || null,
+      })),
+    });
+  } catch (err) {
+    console.error('[agents/activity] error:', err instanceof Error ? err.message : err);
+    return res.status(500).json({ error: 'Failed to load activity.' });
+  }
+});
+
 export default router;

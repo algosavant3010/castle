@@ -10,6 +10,9 @@ import { CreateWalletInline } from "@/components/app/create-wallet-inline";
 import Link from "next/link";
 import BorderGlow from "@/components/reactbits/interactions/BorderGlow";
 import { StatusIcon } from "@/components/app/status-icon";
+import { StatCard } from "@/components/app/stat-card";
+import { EmptyState, BoltMark } from "@/components/app/empty-state";
+import { Skeleton } from "@/components/app/skeleton";
 import { GLOW_PROPS } from "@/lib/ui";
 
 /** Sums balance across all wallets. Each wallet gets its own useBalance hook via a child component. */
@@ -40,7 +43,7 @@ function TotalBalanceDisplay({ wallets }: { wallets: `0x${string}`[] }) {
           }}
         />
       ))}
-      {Object.keys(balances).length === 0 ? "..." : total.toFixed(2)}
+      {Object.keys(balances).length === 0 ? <Skeleton width="4rem" /> : total.toFixed(2)}
     </>
   );
 }
@@ -67,32 +70,27 @@ export default function DashboardPage() {
 
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <BorderGlow {...GLOW_PROPS}>
-          <div className="p-10 text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-semibold text-text">Welcome to Castle</h1>
-            <p className="mt-3 text-sm text-muted leading-relaxed max-w-sm mx-auto">
-              Deploy your first AI Wallet to start delegating on-chain actions with time-boxed session keys and spend limits.
-            </p>
-
-            {!contractsDeployed ? (
-              <div className="mt-6 rounded-xl border border-warning/20 bg-warning/5 p-4">
-                <p className="text-sm text-warning">Contracts not deployed to Monad testnet yet.</p>
-              </div>
-            ) : (
-              <div className="mt-8 space-y-3">
-                <button onClick={() => setShowCreateForm(true)} className="btn btn-primary w-full py-3 text-base inline-flex justify-center">
-                  Deploy AI Wallet
-                </button>
-                <p className="text-xs text-faint">Minimal gas on Monad Testnet.</p>
-              </div>
-            )}
-          </div>
-        </BorderGlow>
+        <div className="w-full max-w-md">
+          <EmptyState
+            icon={<BoltMark size={32} />}
+            title="Welcome to Castle"
+            description="Deploy your first AI Wallet to start delegating on-chain actions with time-boxed session keys and spend limits."
+            action={
+              !contractsDeployed ? (
+                <div className="rounded-xl border border-warning/20 bg-warning/5 p-4">
+                  <p className="text-sm text-warning">Contracts not deployed to Monad testnet yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <button onClick={() => setShowCreateForm(true)} className="btn btn-primary w-full py-3 text-base inline-flex justify-center">
+                    Deploy AI Wallet
+                  </button>
+                  <p className="text-xs text-faint">Minimal gas on Monad Testnet.</p>
+                </div>
+              )
+            }
+          />
+        </div>
       </div>
     );
   }
@@ -110,37 +108,20 @@ export default function DashboardPage() {
 
           {/* Metrics */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
-            <Link href="/wallets" className="block">
-              <BorderGlow {...GLOW_PROPS}>
-                <div className="p-3.5 sm:p-5 cursor-pointer transition-transform duration-150 active:scale-[0.98]">
-                  <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">Total Balance</p>
-                  <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">
-                    <TotalBalanceDisplay wallets={wallets} />
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-muted mt-0.5">MON</p>
-                </div>
-              </BorderGlow>
-            </Link>
-
-            <Link href="/wallets" className="block">
-              <BorderGlow {...GLOW_PROPS}>
-                <div className="p-3.5 sm:p-5 cursor-pointer transition-transform duration-150 active:scale-[0.98]">
-                  <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">AI Wallets</p>
-                  <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">{wallets.length}</p>
-                  <p className="text-[10px] sm:text-xs text-muted mt-0.5">deployed</p>
-                </div>
-              </BorderGlow>
-            </Link>
-
-            <Link href="/marketplace" className="block col-span-2 lg:col-span-1">
-              <BorderGlow {...GLOW_PROPS}>
-                <div className="p-3.5 sm:p-5 cursor-pointer transition-transform duration-150 active:scale-[0.98]">
-                  <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-faint">Open Tasks</p>
-                  <p className="mt-1.5 sm:mt-2 font-mono text-xl sm:text-2xl font-semibold text-text">{taskCount ? Number(taskCount) : 0}</p>
-                  <p className="text-[10px] sm:text-xs text-muted mt-0.5">marketplace</p>
-                </div>
-              </BorderGlow>
-            </Link>
+            <StatCard
+              label="Total Balance"
+              value={<TotalBalanceDisplay wallets={wallets} />}
+              unit="MON"
+              href="/wallets"
+            />
+            <StatCard label="AI Wallets" value={wallets.length} unit="deployed" href="/wallets" />
+            <StatCard
+              label="Open Tasks"
+              value={taskCount ? Number(taskCount) : 0}
+              unit="marketplace"
+              href="/marketplace"
+              className="col-span-2 lg:col-span-1"
+            />
           </div>
 
           {/* Quick actions */}
