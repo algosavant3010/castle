@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "Blitz - Secure autonomy for the agent economy on Monad";
+export const alt = "Castle - Secure autonomy for the agent economy on Monad";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -83,7 +83,7 @@ export default async function TwitterImage() {
             marginBottom: "16px",
           }}
         >
-          Blitz
+          Castle
         </div>
 
         {/* Tagline */}

@@ -1,4 +1,4 @@
-export const BlitzPaymentRouterABI = [
+export const CastlePaymentRouterABI = [
   {
     type: "function",
     name: "send",

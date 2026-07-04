@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
-import { BlitzWalletABI, BlitzWalletFactoryABI } from "@/lib/chain/abis";
+import { CastleWalletABI, CastleWalletFactoryABI } from "@/lib/chain/abis";
 import { CONTRACTS } from "@/lib/chain/addresses";
 import { formatEther } from "viem";
 
@@ -44,7 +44,7 @@ export function useBatchSweep() {
       // 1. Fetch all user vaults
       const vaults = (await publicClient.readContract({
         address: CONTRACTS.factory,
-        abi: BlitzWalletFactoryABI,
+        abi: CastleWalletFactoryABI,
         functionName: "getWallets",
         args: [address],
       })) as `0x${string}`[];
@@ -88,7 +88,7 @@ export function useBatchSweep() {
         try {
           const hash = await walletClient.writeContract({
             address: vault.address,
-            abi: BlitzWalletABI,
+            abi: CastleWalletABI,
             functionName: "emergencyWithdraw",
             args: [address],
           });

@@ -2,11 +2,11 @@
 pragma solidity ^0.8.24;
 
 /**
- * @title BlitzEscrow
+ * @title CastleEscrow
  * @notice Coordinates trustless task exchange between AI agents.
  *         Funds are held in escrow between createTask and releaseFunds.
  */
-contract BlitzEscrow {
+contract CastleEscrow {
     // --- Types ---
     enum Status { Open, Accepted, Submitted, Released, Disputed, Cancelled }
 
@@ -42,9 +42,9 @@ contract BlitzEscrow {
      * @return taskId The ID of the newly created task
      */
     function createTask(string calldata specURI, uint256 deadline) external payable returns (uint256 taskId) {
-        require(msg.value > 0, "BlitzEscrow: reward required");
-        require(deadline > block.timestamp, "BlitzEscrow: deadline in past");
-        require(bytes(specURI).length > 0, "BlitzEscrow: empty spec");
+        require(msg.value > 0, "CastleEscrow: reward required");
+        require(deadline > block.timestamp, "CastleEscrow: deadline in past");
+        require(bytes(specURI).length > 0, "CastleEscrow: empty spec");
 
         taskId = taskCount++;
 
@@ -68,9 +68,9 @@ contract BlitzEscrow {
      */
     function acceptTask(uint256 taskId) external {
         Task storage task = tasks[taskId];
-        require(task.status == Status.Open, "BlitzEscrow: not open");
-        require(msg.sender != task.buyer, "BlitzEscrow: buyer cannot accept");
-        require(block.timestamp <= task.deadline, "BlitzEscrow: past deadline");
+        require(task.status == Status.Open, "CastleEscrow: not open");
+        require(msg.sender != task.buyer, "CastleEscrow: buyer cannot accept");
+        require(block.timestamp <= task.deadline, "CastleEscrow: past deadline");
 
         task.worker = msg.sender;
         task.status = Status.Accepted;
@@ -85,9 +85,9 @@ contract BlitzEscrow {
      */
     function submitWork(uint256 taskId, string calldata resultURI) external {
         Task storage task = tasks[taskId];
-        require(task.status == Status.Accepted, "BlitzEscrow: not accepted");
-        require(msg.sender == task.worker, "BlitzEscrow: not worker");
-        require(bytes(resultURI).length > 0, "BlitzEscrow: empty result");
+        require(task.status == Status.Accepted, "CastleEscrow: not accepted");
+        require(msg.sender == task.worker, "CastleEscrow: not worker");
+        require(bytes(resultURI).length > 0, "CastleEscrow: empty result");
 
         task.resultURI = resultURI;
         task.status = Status.Submitted;
@@ -101,14 +101,14 @@ contract BlitzEscrow {
      */
     function releaseFunds(uint256 taskId) external {
         Task storage task = tasks[taskId];
-        require(task.status == Status.Submitted, "BlitzEscrow: not submitted");
-        require(msg.sender == task.buyer, "BlitzEscrow: not buyer");
+        require(task.status == Status.Submitted, "CastleEscrow: not submitted");
+        require(msg.sender == task.buyer, "CastleEscrow: not buyer");
 
         task.status = Status.Released;
         uint256 amount = task.reward;
 
         (bool success, ) = task.worker.call{value: amount}("");
-        require(success, "BlitzEscrow: transfer failed");
+        require(success, "CastleEscrow: transfer failed");
 
         emit FundsReleased(taskId, task.worker, amount);
     }
@@ -122,11 +122,11 @@ contract BlitzEscrow {
         Task storage task = tasks[taskId];
         require(
             task.status == Status.Accepted || task.status == Status.Submitted,
-            "BlitzEscrow: cannot dispute"
+            "CastleEscrow: cannot dispute"
         );
         require(
             msg.sender == task.buyer || msg.sender == task.worker,
-            "BlitzEscrow: not participant"
+            "CastleEscrow: not participant"
         );
 
         task.status = Status.Disputed;
@@ -140,15 +140,15 @@ contract BlitzEscrow {
      */
     function reclaim(uint256 taskId) external {
         Task storage task = tasks[taskId];
-        require(task.status == Status.Open, "BlitzEscrow: not open");
-        require(msg.sender == task.buyer, "BlitzEscrow: not buyer");
-        require(block.timestamp > task.deadline, "BlitzEscrow: deadline not passed");
+        require(task.status == Status.Open, "CastleEscrow: not open");
+        require(msg.sender == task.buyer, "CastleEscrow: not buyer");
+        require(block.timestamp > task.deadline, "CastleEscrow: deadline not passed");
 
         task.status = Status.Cancelled;
         uint256 amount = task.reward;
 
         (bool success, ) = task.buyer.call{value: amount}("");
-        require(success, "BlitzEscrow: transfer failed");
+        require(success, "CastleEscrow: transfer failed");
 
         emit TaskCancelled(taskId);
     }

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
-import { BlitzWalletABI } from "@/lib/chain/abis";
+import { CastleWalletABI } from "@/lib/chain/abis";
 import { showTxOverlay, hideTxOverlay } from "@/components/app/transaction-overlay";
 
 /**
@@ -24,7 +24,7 @@ export function useWithdrawFunds(vaultAddress: `0x${string}` | undefined) {
     if (!userAddress || !vaultAddress) return;
     writeContract({
       address: vaultAddress,
-      abi: BlitzWalletABI,
+      abi: CastleWalletABI,
       functionName: "emergencyWithdraw",
       args: [userAddress],
     });

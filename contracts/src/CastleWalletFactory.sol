@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./BlitzWallet.sol";
+import "./CastleWallet.sol";
 
 /**
- * @title BlitzWalletFactory
- * @notice Deploys BlitzWallet instances and maintains a registry of all deployed wallets.
+ * @title CastleWalletFactory
+ * @notice Deploys CastleWallet instances and maintains a registry of all deployed wallets.
  */
-contract BlitzWalletFactory {
+contract CastleWalletFactory {
     // --- State ---
     mapping(address => address[]) public ownerWallets;
     address[] public allWallets;
@@ -18,11 +18,11 @@ contract BlitzWalletFactory {
     // --- Functions ---
 
     /**
-     * @notice Deploy a new BlitzWallet for the caller.
-     * @return wallet The address of the newly deployed BlitzWallet
+     * @notice Deploy a new CastleWallet for the caller.
+     * @return wallet The address of the newly deployed CastleWallet
      */
     function deployWallet() external returns (address wallet) {
-        BlitzWallet newWallet = new BlitzWallet(msg.sender);
+        CastleWallet newWallet = new CastleWallet(msg.sender);
         wallet = address(newWallet);
 
         ownerWallets[msg.sender].push(wallet);

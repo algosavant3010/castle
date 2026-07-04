@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import "../src/BlitzWallet.sol";
+import "../src/CastleWallet.sol";
 
 // Mock target contract for testing
 contract MockEscrow {
@@ -22,8 +22,8 @@ contract MockEscrow {
     }
 }
 
-contract BlitzWalletTest is Test {
-    BlitzWallet public wallet;
+contract CastleWalletTest is Test {
+    CastleWallet public wallet;
     MockEscrow public escrow;
 
     address public owner = makeAddr("owner");
@@ -37,7 +37,7 @@ contract BlitzWalletTest is Test {
         vm.deal(owner, 100 ether);
 
         vm.prank(owner);
-        wallet = new BlitzWallet(owner);
+        wallet = new CastleWallet(owner);
 
         escrow = new MockEscrow();
 
@@ -81,7 +81,7 @@ contract BlitzWalletTest is Test {
         fns[0] = acceptTaskSelector;
 
         vm.prank(attacker);
-        vm.expectRevert("BlitzWallet: not owner");
+        vm.expectRevert("CastleWallet: not owner");
         wallet.registerSessionKey(sessionKey, block.timestamp + 1 hours, 1 ether, address(escrow), fns);
     }
 
@@ -90,7 +90,7 @@ contract BlitzWalletTest is Test {
         fns[0] = acceptTaskSelector;
 
         vm.prank(owner);
-        vm.expectRevert("BlitzWallet: zero key");
+        vm.expectRevert("CastleWallet: zero key");
         wallet.registerSessionKey(address(0), block.timestamp + 1 hours, 1 ether, address(escrow), fns);
     }
 
@@ -99,7 +99,7 @@ contract BlitzWalletTest is Test {
         fns[0] = acceptTaskSelector;
 
         vm.prank(owner);
-        vm.expectRevert("BlitzWallet: expiry in past");
+        vm.expectRevert("CastleWallet: expiry in past");
         wallet.registerSessionKey(sessionKey, block.timestamp - 1, 1 ether, address(escrow), fns);
     }
 
@@ -111,7 +111,7 @@ contract BlitzWalletTest is Test {
         wallet.registerSessionKey(sessionKey, block.timestamp + 1 hours, 1 ether, address(escrow), fns);
 
         vm.prank(owner);
-        vm.expectRevert("BlitzWallet: key already active");
+        vm.expectRevert("CastleWallet: key already active");
         wallet.registerSessionKey(sessionKey, block.timestamp + 2 hours, 2 ether, address(escrow), fns);
     }
 
@@ -143,7 +143,7 @@ contract BlitzWalletTest is Test {
         bytes memory callData = abi.encodeWithSelector(acceptTaskSelector, uint256(1));
 
         vm.prank(sessionKey);
-        vm.expectRevert("BlitzWallet: key not active");
+        vm.expectRevert("CastleWallet: key not active");
         wallet.executeAsAgent(address(escrow), 0, callData);
     }
 
@@ -156,7 +156,7 @@ contract BlitzWalletTest is Test {
         bytes memory callData = abi.encodeWithSelector(acceptTaskSelector, uint256(1));
 
         vm.prank(sessionKey);
-        vm.expectRevert("BlitzWallet: key expired");
+        vm.expectRevert("CastleWallet: key expired");
         wallet.executeAsAgent(address(escrow), 0, callData);
     }
 
@@ -167,7 +167,7 @@ contract BlitzWalletTest is Test {
         bytes memory callData = abi.encodeWithSelector(acceptTaskSelector, uint256(1));
 
         vm.prank(sessionKey);
-        vm.expectRevert("BlitzWallet: unauthorized target");
+        vm.expectRevert("CastleWallet: unauthorized target");
         wallet.executeAsAgent(fakeTarget, 0, callData);
     }
 
@@ -177,7 +177,7 @@ contract BlitzWalletTest is Test {
         bytes memory callData = abi.encodeWithSelector(MockEscrow.maliciousFunction.selector);
 
         vm.prank(sessionKey);
-        vm.expectRevert("BlitzWallet: unauthorized function");
+        vm.expectRevert("CastleWallet: unauthorized function");
         wallet.executeAsAgent(address(escrow), 0, callData);
     }
 
@@ -192,7 +192,7 @@ contract BlitzWalletTest is Test {
 
         // Second call tries 2 more ether (would total 6, over 5 cap)
         vm.prank(sessionKey);
-        vm.expectRevert("BlitzWallet: daily cap exceeded");
+        vm.expectRevert("CastleWallet: daily cap exceeded");
         wallet.executeAsAgent(address(escrow), 2 ether, callData);
     }
 
@@ -234,7 +234,7 @@ contract BlitzWalletTest is Test {
         bytes memory callData = abi.encodeWithSelector(acceptTaskSelector, uint256(1));
 
         vm.prank(attacker);
-        vm.expectRevert("BlitzWallet: key not active");
+        vm.expectRevert("CastleWallet: key not active");
         wallet.executeAsAgent(address(escrow), 0, callData);
     }
 
@@ -274,13 +274,13 @@ contract BlitzWalletTest is Test {
         bytes memory callData = abi.encodeWithSelector(acceptTaskSelector, uint256(1));
 
         vm.prank(sessionKey);
-        vm.expectRevert("BlitzWallet: key not active");
+        vm.expectRevert("CastleWallet: key not active");
         wallet.executeAsAgent(address(escrow), 0, callData);
     }
 
     function test_FreezeAgent_RevertNotOwner() public {
         vm.prank(attacker);
-        vm.expectRevert("BlitzWallet: not owner");
+        vm.expectRevert("CastleWallet: not owner");
         wallet.freezeAgent();
     }
 
@@ -299,23 +299,23 @@ contract BlitzWalletTest is Test {
 
     function test_EmergencyWithdraw_RevertNotOwner() public {
         vm.prank(attacker);
-        vm.expectRevert("BlitzWallet: not owner");
+        vm.expectRevert("CastleWallet: not owner");
         wallet.emergencyWithdraw(attacker);
     }
 
     function test_EmergencyWithdraw_RevertNoBalance() public {
         // Deploy a new empty wallet
         vm.prank(owner);
-        BlitzWallet emptyWallet = new BlitzWallet(owner);
+        CastleWallet emptyWallet = new CastleWallet(owner);
 
         vm.prank(owner);
-        vm.expectRevert("BlitzWallet: no balance");
+        vm.expectRevert("CastleWallet: no balance");
         emptyWallet.emergencyWithdraw(owner);
     }
 
     function test_EmergencyWithdraw_RevertZeroRecipient() public {
         vm.prank(owner);
-        vm.expectRevert("BlitzWallet: zero recipient");
+        vm.expectRevert("CastleWallet: zero recipient");
         wallet.emergencyWithdraw(address(0));
     }
 

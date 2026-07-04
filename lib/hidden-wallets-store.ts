@@ -5,8 +5,8 @@
  */
 
 // Keep same localStorage keys for backward compatibility
-const IMPORTED_KEY = "blitz_imported_vaults";
-const HIDDEN_KEY = "blitz_hidden_vaults";
+const IMPORTED_KEY = "castle_imported_vaults";
+const HIDDEN_KEY = "castle_hidden_vaults";
 
 function getStoredArray(key: string): string[] {
   if (typeof window === "undefined") return [];

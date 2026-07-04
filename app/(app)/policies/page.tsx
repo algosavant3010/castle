@@ -22,7 +22,7 @@ export interface PolicyTemplate {
   createdAt: string;
 }
 
-const STORAGE_KEY = "blitz_policy_templates";
+const STORAGE_KEY = "castle_policy_templates";
 
 function loadTemplates(): PolicyTemplate[] {
   if (typeof window === "undefined") return [];

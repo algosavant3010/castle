@@ -10,8 +10,8 @@ import { publicClient, createAgentWalletClient } from '../services/chain.js';
 import { supabase } from '../services/supabase.js';
 import { alertOnSend, alertBudgetWarning } from '../services/telegram.js';
 import { needsApproval, requestApproval, getAgentName } from '../services/approval.js';
-import { BlitzWalletABI } from '../abis/BlitzWallet.js';
-import { BlitzPaymentRouterABI } from '../abis/BlitzPaymentRouter.js';
+import { CastleWalletABI } from '../abis/CastleWallet.js';
+import { CastlePaymentRouterABI } from '../abis/CastlePaymentRouter.js';
 import { config } from '../config.js';
 
 const router = Router();
@@ -67,8 +67,8 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
     const value = parseEther(amount);
     const target = config.contracts.paymentRouter;
     const calldata = memo
-      ? encodeFunctionData({ abi: BlitzPaymentRouterABI, functionName: 'sendWithMemo', args: [to as `0x${string}`, memo] })
-      : encodeFunctionData({ abi: BlitzPaymentRouterABI, functionName: 'send', args: [to as `0x${string}`] });
+      ? encodeFunctionData({ abi: CastlePaymentRouterABI, functionName: 'sendWithMemo', args: [to as `0x${string}`, memo] })
+      : encodeFunctionData({ abi: CastlePaymentRouterABI, functionName: 'send', args: [to as `0x${string}`] });
 
     // Log intent
     await supabase.from('transactions').insert({
@@ -77,10 +77,10 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
       ip_address: req.clientMeta?.ip, origin: req.clientMeta?.origin,
     });
 
-    // Execute directly on-chain (policy enforced by BlitzWallet contract)
+    // Execute directly on-chain (policy enforced by CastleWallet contract)
     const walletClient = createAgentWalletClient(creds.privateKey);
     const hash = await walletClient.writeContract({
-      address: creds.vaultAddress, abi: BlitzWalletABI, functionName: 'executeAsAgent',
+      address: creds.vaultAddress, abi: CastleWalletABI, functionName: 'executeAsAgent',
       args: [target, value, calldata as `0x${string}`],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
@@ -102,7 +102,7 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
 
     // Budget warning at 80%
     if (creds.ownerAddress) {
-      const policy = await publicClient.readContract({ address: creds.vaultAddress, abi: BlitzWalletABI, functionName: 'getSessionPolicy', args: [creds.agentAddress] }) as [bigint, bigint, bigint, bigint, `0x${string}`, `0x${string}`[], boolean];
+      const policy = await publicClient.readContract({ address: creds.vaultAddress, abi: CastleWalletABI, functionName: 'getSessionPolicy', args: [creds.agentAddress] }) as [bigint, bigint, bigint, bigint, `0x${string}`, `0x${string}`[], boolean];
       const [, dailyCap, spentToday] = policy;
       const percent = dailyCap > 0n ? Number((spentToday * 100n) / dailyCap) : 0;
       if (percent >= 80) {

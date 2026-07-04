@@ -48,7 +48,7 @@ app.use(globalRateLimiter);
 app.use(ipMonitor);
 
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'blitz-server', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', service: 'castle-server', timestamp: new Date().toISOString() });
 });
 
 app.use('/api/agent/info', agentInfoRouter);
@@ -68,9 +68,9 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 });
 
 app.listen(PORT, () => {
-  console.log(`[Blitz Server] Running on port ${PORT}`);
-  console.log(`[Blitz Server] Env: ${config.nodeEnv}`);
-  console.log(`[Blitz Server] Supabase: ${process.env.SUPABASE_URL}`);
+  console.log(`[Castle Server] Running on port ${PORT}`);
+  console.log(`[Castle Server] Env: ${config.nodeEnv}`);
+  console.log(`[Castle Server] Supabase: ${process.env.SUPABASE_URL}`);
 
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (botToken) {

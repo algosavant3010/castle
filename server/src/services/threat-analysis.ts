@@ -48,14 +48,14 @@ const SUSPICIOUS_FUNCTION_NAMES = [
 // Unlimited approval value (type(uint256).max)
 const UNLIMITED_APPROVAL = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
-// Known Blitz protocol contracts (safe targets)
-function isBlitzContract(target: string): boolean {
-  const blitz = [
+// Known Castle protocol contracts (safe targets)
+function isCastleContract(target: string): boolean {
+  const castle = [
     config.contracts.factory.toLowerCase(),
     config.contracts.escrow.toLowerCase(),
     config.contracts.paymentRouter.toLowerCase(),
   ];
-  return blitz.includes(target.toLowerCase());
+  return castle.includes(target.toLowerCase());
 }
 
 /**
@@ -75,9 +75,9 @@ export function analyzeContractCall(params: {
   const flags: string[] = [];
   let level: ThreatLevel = 'safe';
 
-  // 1. Blitz contracts are always safe
-  if (isBlitzContract(target)) {
-    return { level: 'safe', flags: [], summary: 'Blitz protocol contract — trusted.', shouldBlock: false };
+  // 1. Castle contracts are always safe
+  if (isCastleContract(target)) {
+    return { level: 'safe', flags: [], summary: 'Castle protocol contract — trusted.', shouldBlock: false };
   }
 
   // 2. Check function name against suspicious list
@@ -110,7 +110,7 @@ export function analyzeContractCall(params: {
 
   // 5. Check if sending large value to unknown contract
   const valueMon = parseFloat(value || '0');
-  if (valueMon > 0 && !isBlitzContract(target)) {
+  if (valueMon > 0 && !isCastleContract(target)) {
     if (valueMon > 5) {
       flags.push(`Sending ${value} MON to unknown contract ${target.slice(0, 10)}...`);
       level = level === 'danger' ? 'danger' : 'warning';
@@ -182,7 +182,7 @@ export function buildThreatAlert(params: {
     msg += `• ${flag}\n`;
   }
   msg += `\n<b>Action:</b> ${threat.shouldBlock ? 'BLOCKED automatically.' : 'Allowed but flagged — monitor closely.'}`;
-  msg += `\n\n💡 If unexpected, freeze the agent from the Blitz dashboard.`;
+  msg += `\n\n💡 If unexpected, freeze the agent from the Castle dashboard.`;
 
   return msg;
 }

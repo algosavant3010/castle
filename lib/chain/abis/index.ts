@@ -1,4 +1,4 @@
-export { BlitzWalletABI } from './BlitzWallet';
-export { BlitzWalletFactoryABI } from './BlitzWalletFactory';
-export { BlitzEscrowABI } from './BlitzEscrow';
-export { BlitzPaymentRouterABI } from './BlitzPaymentRouter';
+export { CastleWalletABI } from './CastleWallet';
+export { CastleWalletFactoryABI } from './CastleWalletFactory';
+export { CastleEscrowABI } from './CastleEscrow';
+export { CastlePaymentRouterABI } from './CastlePaymentRouter';

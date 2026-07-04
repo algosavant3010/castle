@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { BlitzWalletABI } from '@/lib/chain/abis';
+import { CastleWalletABI } from '@/lib/chain/abis';
 import { showTxOverlay, hideTxOverlay } from "@/components/app/transaction-overlay";
 
 export function useRegisterSession(walletAddress: `0x${string}`) {
@@ -23,7 +23,7 @@ export function useRegisterSession(walletAddress: `0x${string}`) {
   ) => {
     writeContract({
       address: walletAddress,
-      abi: BlitzWalletABI,
+      abi: CastleWalletABI,
       functionName: 'registerSessionKey',
       args: [key, expiry, dailyCap, allowedTarget, allowedFns],
     });

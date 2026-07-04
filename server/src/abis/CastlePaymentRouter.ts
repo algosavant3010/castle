@@ -1,4 +1,4 @@
-export const BlitzPaymentRouterABI = [
+export const CastlePaymentRouterABI = [
   { type: "function", name: "send", inputs: [{ name: "to", type: "address" }], outputs: [], stateMutability: "payable" },
   { type: "function", name: "sendWithMemo", inputs: [{ name: "to", type: "address" }, { name: "memo", type: "string" }], outputs: [], stateMutability: "payable" },
   { type: "event", name: "PaymentRouted", inputs: [{ name: "from", type: "address", indexed: true }, { name: "to", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },

@@ -5,7 +5,7 @@ import { ownerAuth } from '../middleware/owner-auth.js';
 import { publicClient } from '../services/chain.js';
 import { supabase } from '../services/supabase.js';
 import { encryptPrivateKey, generateAccessToken, hashToken } from '../services/crypto.js';
-import { BlitzWalletABI } from '../abis/BlitzWallet.js';
+import { CastleWalletABI } from '../abis/CastleWallet.js';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ const SELECTOR_RE = /^0x[0-9a-fA-F]{8}$/;
 /**
  * POST /api/agents/create
  *
- * Creates a Blitz agent for a vault the caller owns. The session key is
+ * Creates a Castle agent for a vault the caller owns. The session key is
  * generated and its private key encrypted (AES-256-GCM) entirely server-side;
  * the raw key never touches the browser. Returns the session key address (to be
  * registered on-chain by the owner) and the one-time access token.
@@ -71,11 +71,11 @@ router.post('/create', ownerAuth('create-agent'), async (req: Request, res: Resp
     try {
       onchainOwner = await publicClient.readContract({
         address: getAddress(vaultAddress),
-        abi: BlitzWalletABI,
+        abi: CastleWalletABI,
         functionName: 'owner',
       }) as string;
     } catch {
-      return res.status(400).json({ error: 'Vault not found on-chain or not a Blitz wallet.' });
+      return res.status(400).json({ error: 'Vault not found on-chain or not a Castle wallet.' });
     }
     if (getAddress(onchainOwner) !== getAddress(owner)) {
       return res.status(403).json({ error: 'You are not the owner of this vault.' });

@@ -2,10 +2,10 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import "../src/BlitzEscrow.sol";
+import "../src/CastleEscrow.sol";
 
-contract BlitzEscrowTest is Test {
-    BlitzEscrow public escrow;
+contract CastleEscrowTest is Test {
+    CastleEscrow public escrow;
 
     address public buyer = makeAddr("buyer");
     address public worker = makeAddr("worker");
@@ -15,7 +15,7 @@ contract BlitzEscrowTest is Test {
     uint256 public deadline;
 
     function setUp() public {
-        escrow = new BlitzEscrow();
+        escrow = new CastleEscrow();
         vm.deal(buyer, 100 ether);
         vm.deal(worker, 10 ether);
         deadline = block.timestamp + 7 days;
@@ -30,33 +30,33 @@ contract BlitzEscrowTest is Test {
         assertEq(taskId, 0);
         assertEq(escrow.taskCount(), 1);
 
-        (address b, address w, uint256 r, string memory spec, , BlitzEscrow.Status s, uint256 created, uint256 dl) = 
+        (address b, address w, uint256 r, string memory spec, , CastleEscrow.Status s, uint256 created, uint256 dl) = 
             escrow.getTask(taskId);
         
         assertEq(b, buyer);
         assertEq(w, address(0));
         assertEq(r, REWARD);
         assertEq(spec, "ipfs://spec123");
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Open));
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Open));
         assertEq(created, block.timestamp);
         assertEq(dl, deadline);
     }
 
     function test_CreateTask_RevertNoReward() public {
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: reward required");
+        vm.expectRevert("CastleEscrow: reward required");
         escrow.createTask{value: 0}("ipfs://spec", deadline);
     }
 
     function test_CreateTask_RevertPastDeadline() public {
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: deadline in past");
+        vm.expectRevert("CastleEscrow: deadline in past");
         escrow.createTask{value: REWARD}("ipfs://spec", block.timestamp - 1);
     }
 
     function test_CreateTask_RevertEmptySpec() public {
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: empty spec");
+        vm.expectRevert("CastleEscrow: empty spec");
         escrow.createTask{value: REWARD}("", deadline);
     }
 
@@ -68,16 +68,16 @@ contract BlitzEscrowTest is Test {
         vm.prank(worker);
         escrow.acceptTask(taskId);
 
-        (, address w, , , , BlitzEscrow.Status s, , ) = escrow.getTask(taskId);
+        (, address w, , , , CastleEscrow.Status s, , ) = escrow.getTask(taskId);
         assertEq(w, worker);
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Accepted));
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Accepted));
     }
 
     function test_AcceptTask_RevertBuyerCannotAccept() public {
         uint256 taskId = _createDefaultTask();
 
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: buyer cannot accept");
+        vm.expectRevert("CastleEscrow: buyer cannot accept");
         escrow.acceptTask(taskId);
     }
 
@@ -90,7 +90,7 @@ contract BlitzEscrowTest is Test {
 
         // Try to accept again (a different worker)
         vm.prank(outsider);
-        vm.expectRevert("BlitzEscrow: not open");
+        vm.expectRevert("CastleEscrow: not open");
         escrow.acceptTask(taskId);
     }
 
@@ -100,7 +100,7 @@ contract BlitzEscrowTest is Test {
         vm.warp(deadline + 1);
 
         vm.prank(worker);
-        vm.expectRevert("BlitzEscrow: past deadline");
+        vm.expectRevert("CastleEscrow: past deadline");
         escrow.acceptTask(taskId);
     }
 
@@ -112,16 +112,16 @@ contract BlitzEscrowTest is Test {
         vm.prank(worker);
         escrow.submitWork(taskId, "ipfs://result456");
 
-        (, , , , string memory resultURI, BlitzEscrow.Status s, , ) = escrow.getTask(taskId);
+        (, , , , string memory resultURI, CastleEscrow.Status s, , ) = escrow.getTask(taskId);
         assertEq(resultURI, "ipfs://result456");
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Submitted));
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Submitted));
     }
 
     function test_SubmitWork_RevertNotWorker() public {
         uint256 taskId = _createAndAcceptTask();
 
         vm.prank(outsider);
-        vm.expectRevert("BlitzEscrow: not worker");
+        vm.expectRevert("CastleEscrow: not worker");
         escrow.submitWork(taskId, "ipfs://result");
     }
 
@@ -129,7 +129,7 @@ contract BlitzEscrowTest is Test {
         uint256 taskId = _createDefaultTask();
 
         vm.prank(worker);
-        vm.expectRevert("BlitzEscrow: not accepted");
+        vm.expectRevert("CastleEscrow: not accepted");
         escrow.submitWork(taskId, "ipfs://result");
     }
 
@@ -137,7 +137,7 @@ contract BlitzEscrowTest is Test {
         uint256 taskId = _createAndAcceptTask();
 
         vm.prank(worker);
-        vm.expectRevert("BlitzEscrow: empty result");
+        vm.expectRevert("CastleEscrow: empty result");
         escrow.submitWork(taskId, "");
     }
 
@@ -151,8 +151,8 @@ contract BlitzEscrowTest is Test {
         vm.prank(buyer);
         escrow.releaseFunds(taskId);
 
-        (, , , , , BlitzEscrow.Status s, , ) = escrow.getTask(taskId);
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Released));
+        (, , , , , CastleEscrow.Status s, , ) = escrow.getTask(taskId);
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Released));
         assertEq(worker.balance, workerBalanceBefore + REWARD);
         assertEq(address(escrow).balance, 0);
     }
@@ -161,7 +161,7 @@ contract BlitzEscrowTest is Test {
         uint256 taskId = _createAcceptAndSubmitTask();
 
         vm.prank(outsider);
-        vm.expectRevert("BlitzEscrow: not buyer");
+        vm.expectRevert("CastleEscrow: not buyer");
         escrow.releaseFunds(taskId);
     }
 
@@ -169,7 +169,7 @@ contract BlitzEscrowTest is Test {
         uint256 taskId = _createAndAcceptTask();
 
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: not submitted");
+        vm.expectRevert("CastleEscrow: not submitted");
         escrow.releaseFunds(taskId);
     }
 
@@ -181,8 +181,8 @@ contract BlitzEscrowTest is Test {
         vm.prank(buyer);
         escrow.raiseDispute(taskId);
 
-        (, , , , , BlitzEscrow.Status s, , ) = escrow.getTask(taskId);
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Disputed));
+        (, , , , , CastleEscrow.Status s, , ) = escrow.getTask(taskId);
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Disputed));
     }
 
     function test_RaiseDispute_Worker() public {
@@ -191,15 +191,15 @@ contract BlitzEscrowTest is Test {
         vm.prank(worker);
         escrow.raiseDispute(taskId);
 
-        (, , , , , BlitzEscrow.Status s, , ) = escrow.getTask(taskId);
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Disputed));
+        (, , , , , CastleEscrow.Status s, , ) = escrow.getTask(taskId);
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Disputed));
     }
 
     function test_RaiseDispute_RevertNotParticipant() public {
         uint256 taskId = _createAndAcceptTask();
 
         vm.prank(outsider);
-        vm.expectRevert("BlitzEscrow: not participant");
+        vm.expectRevert("CastleEscrow: not participant");
         escrow.raiseDispute(taskId);
     }
 
@@ -207,7 +207,7 @@ contract BlitzEscrowTest is Test {
         uint256 taskId = _createDefaultTask();
 
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: cannot dispute");
+        vm.expectRevert("CastleEscrow: cannot dispute");
         escrow.raiseDispute(taskId);
     }
 
@@ -223,8 +223,8 @@ contract BlitzEscrowTest is Test {
         vm.prank(buyer);
         escrow.reclaim(taskId);
 
-        (, , , , , BlitzEscrow.Status s, , ) = escrow.getTask(taskId);
-        assertEq(uint256(s), uint256(BlitzEscrow.Status.Cancelled));
+        (, , , , , CastleEscrow.Status s, , ) = escrow.getTask(taskId);
+        assertEq(uint256(s), uint256(CastleEscrow.Status.Cancelled));
         assertEq(buyer.balance, buyerBalanceBefore + REWARD);
     }
 
@@ -233,7 +233,7 @@ contract BlitzEscrowTest is Test {
         vm.warp(deadline + 1);
 
         vm.prank(outsider);
-        vm.expectRevert("BlitzEscrow: not buyer");
+        vm.expectRevert("CastleEscrow: not buyer");
         escrow.reclaim(taskId);
     }
 
@@ -241,7 +241,7 @@ contract BlitzEscrowTest is Test {
         uint256 taskId = _createDefaultTask();
 
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: deadline not passed");
+        vm.expectRevert("CastleEscrow: deadline not passed");
         escrow.reclaim(taskId);
     }
 
@@ -250,7 +250,7 @@ contract BlitzEscrowTest is Test {
         vm.warp(deadline + 1);
 
         vm.prank(buyer);
-        vm.expectRevert("BlitzEscrow: not open");
+        vm.expectRevert("CastleEscrow: not open");
         escrow.reclaim(taskId);
     }
 

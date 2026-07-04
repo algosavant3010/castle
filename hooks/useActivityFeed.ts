@@ -2,7 +2,7 @@
 
 import { useWatchContractEvent, usePublicClient } from 'wagmi';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { BlitzEscrowABI, BlitzWalletABI } from '@/lib/chain/abis';
+import { CastleEscrowABI, CastleWalletABI } from '@/lib/chain/abis';
 import { CONTRACTS } from '@/lib/chain/addresses';
 import { formatEther, type Log } from 'viem';
 import { useWallets } from '@/hooks/useWallets';
@@ -41,7 +41,7 @@ export function useActivityFeed() {
   // Watch BlitzEscrow events (global marketplace activity)
   useWatchContractEvent({
     address: CONTRACTS.escrow,
-    abi: BlitzEscrowABI,
+    abi: CastleEscrowABI,
     onLogs: (logs) => {
       const newEvents: ActivityEvent[] = logs.map((log) => ({
         id: `${log.transactionHash}-${log.logIndex}`,
@@ -75,7 +75,7 @@ export function useActivityFeed() {
     for (const walletAddress of wallets) {
       const unwatch = publicClient.watchContractEvent({
         address: walletAddress,
-        abi: BlitzWalletABI,
+        abi: CastleWalletABI,
         eventName: 'AgentExecution',
         onLogs: (logs) => {
           for (const log of logs) {

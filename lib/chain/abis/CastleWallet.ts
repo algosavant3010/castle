@@ -1,4 +1,4 @@
-export const BlitzWalletABI = [
+export const CastleWalletABI = [
   {
     type: "constructor",
     inputs: [{ name: "_owner", type: "address" }],

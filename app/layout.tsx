@@ -17,13 +17,13 @@ const SITE_URL = "https://blitz-app.netlify.app";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Blitz - Secure autonomy for the agent economy on Monad",
-    template: "%s | Blitz",
+    default: "Castle - Secure autonomy for the agent economy on Monad",
+    template: "%s | Castle",
   },
   description:
     "Let agents transact. Keep your funds untouchable. Time-boxed session keys, on-chain spend limits, and pre-sign simulation on Monad.",
   keywords: [
-    "Blitz",
+    "Castle",
     "Monad",
     "AI agents",
     "session keys",
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
     "spend limits",
     "blockchain autonomy",
   ],
-  authors: [{ name: "Blitz" }],
-  creator: "Blitz",
-  publisher: "Blitz",
+  authors: [{ name: "Castle" }],
+  creator: "Castle",
+  publisher: "Castle",
   robots: {
     index: true,
     follow: true,
@@ -57,14 +57,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "Blitz",
-    title: "Blitz - Secure autonomy for the agent economy on Monad",
+    siteName: "Castle",
+    title: "Castle - Secure autonomy for the agent economy on Monad",
     description:
       "Let agents transact. Keep your funds untouchable. Time-boxed session keys, on-chain spend limits, and pre-sign simulation on Monad.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blitz - Secure autonomy for the agent economy on Monad",
+    title: "Castle - Secure autonomy for the agent economy on Monad",
     description:
       "Let agents transact. Keep your funds untouchable. Time-boxed session keys, on-chain spend limits, and pre-sign simulation on Monad.",
   },

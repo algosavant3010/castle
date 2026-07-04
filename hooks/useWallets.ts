@@ -1,7 +1,7 @@
 "use client";
 
 import { useReadContract, useBalance, useAccount } from 'wagmi';
-import { BlitzWalletFactoryABI } from '@/lib/chain/abis';
+import { CastleWalletFactoryABI } from '@/lib/chain/abis';
 import { CONTRACTS } from '@/lib/chain/addresses';
 
 export function useWallets() {
@@ -9,7 +9,7 @@ export function useWallets() {
 
   const { data: walletAddresses, isLoading, refetch } = useReadContract({
     address: CONTRACTS.factory,
-    abi: BlitzWalletFactoryABI,
+    abi: CastleWalletFactoryABI,
     functionName: 'getWallets',
     args: address ? [address] : undefined,
     query: { enabled: !!address && CONTRACTS.factory !== '0x0000000000000000000000000000000000000000' },

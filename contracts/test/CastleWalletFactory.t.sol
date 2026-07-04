@@ -2,17 +2,17 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import "../src/BlitzWalletFactory.sol";
-import "../src/BlitzWallet.sol";
+import "../src/CastleWalletFactory.sol";
+import "../src/CastleWallet.sol";
 
-contract BlitzWalletFactoryTest is Test {
-    BlitzWalletFactory public factory;
+contract CastleWalletFactoryTest is Test {
+    CastleWalletFactory public factory;
 
     address public user1 = makeAddr("user1");
     address public user2 = makeAddr("user2");
 
     function setUp() public {
-        factory = new BlitzWalletFactory();
+        factory = new CastleWalletFactory();
     }
 
     function test_DeployWallet() public {
@@ -20,7 +20,7 @@ contract BlitzWalletFactoryTest is Test {
         address wallet = factory.deployWallet();
 
         assertTrue(wallet != address(0));
-        assertEq(BlitzWallet(payable(wallet)).owner(), user1);
+        assertEq(CastleWallet(payable(wallet)).owner(), user1);
         assertEq(factory.getWalletCount(user1), 1);
     }
 
@@ -65,8 +65,8 @@ contract BlitzWalletFactoryTest is Test {
         assertEq(user2Wallets[0], wallet2);
 
         // Owner is correct
-        assertEq(BlitzWallet(payable(wallet1)).owner(), user1);
-        assertEq(BlitzWallet(payable(wallet2)).owner(), user2);
+        assertEq(CastleWallet(payable(wallet1)).owner(), user1);
+        assertEq(CastleWallet(payable(wallet2)).owner(), user2);
     }
 
     function test_GetAllWallets() public {
@@ -107,14 +107,14 @@ contract BlitzWalletFactoryTest is Test {
 
         // Owner can emergency withdraw
         vm.prank(user1);
-        BlitzWallet(payable(wallet)).emergencyWithdraw(user1);
+        CastleWallet(payable(wallet)).emergencyWithdraw(user1);
         assertEq(wallet.balance, 0);
     }
 
     function test_EmitsWalletDeployedEvent() public {
         vm.prank(user1);
         vm.expectEmit(true, false, false, false);
-        emit BlitzWalletFactory.WalletDeployed(user1, address(0)); // address unknown before deploy
+        emit CastleWalletFactory.WalletDeployed(user1, address(0)); // address unknown before deploy
         factory.deployWallet();
     }
 }

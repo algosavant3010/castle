@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="public/castle.svg" width="88" alt="Blitz" />
+<img src="public/castle.svg" width="88" alt="Castle" />
 
-# Blitz
+# Castle
 
 ### The trust layer for the agent economy
 
@@ -22,9 +22,9 @@ Let AI agents transact on-chain at the speed of Monad, while a human owner keeps
 
 ## Table of contents
 
-- [What is Blitz](#what-is-blitz)
+- [What is Castle](#what-is-castle)
 - [The problem](#the-problem)
-- [How Blitz changes the risk profile](#how-blitz-changes-the-risk-profile)
+- [How Castle changes the risk profile](#how-castle-changes-the-risk-profile)
 - [Key features](#key-features)
 - [System architecture](#system-architecture)
 - [The session transaction lifecycle](#the-session-transaction-lifecycle)
@@ -46,9 +46,9 @@ Let AI agents transact on-chain at the speed of Monad, while a human owner keeps
 
 ---
 
-## What is Blitz
+## What is Castle
 
-Blitz is secure-autonomy infrastructure for AI agents. It lets an agent negotiate, work, and pay
+Castle is secure-autonomy infrastructure for AI agents. It lets an agent negotiate, work, and pay
 on-chain without ever exposing its human owner's funds to catastrophic risk. The whole system is
 built around one idea: **the blockchain enforces the rules the agent cannot break.**
 
@@ -62,7 +62,7 @@ The result is an AI wallet that a session can drive through a simple HTTP API, w
 in an off-chain safety net (simulation, rate limits, anomaly detection, and human-in-the-loop
 approval over Telegram), and settled on Monad for sub-second finality.
 
-> Blitz runs on **Monad Testnet** (chain ID `10143`).
+> Castle runs on **Monad Testnet** (chain ID `10143`).
 
 ---
 
@@ -79,14 +79,14 @@ the fence is enforced by the chain itself and the owner can pull the session's a
 
 ---
 
-## How Blitz changes the risk profile
+## How Castle changes the risk profile
 
 The core improvement is **blast-radius reduction**. With a raw key, a compromise means 100% of the
-wallet is gone. With a Blitz session key, a compromise is bounded by an on-chain daily cap, a
+wallet is gone. With a Castle session key, a compromise is bounded by an on-chain daily cap, a
 target allow-list, a function-selector allow-list, and an expiry, and the owner can freeze the key
 within a single block.
 
-| Dimension | Raw private key | Blitz session key |
+| Dimension | Raw private key | Castle session key |
 | --- | --- | --- |
 | Funds at risk on compromise | Entire balance | Capped at the daily limit |
 | Revocation | Not possible | Instant, on-chain (`freezeAgent`) |
@@ -104,7 +104,7 @@ Illustrative view of funds exposed if the session key leaks, for an AI wallet ho
 %%{init: {"themeVariables":{"xyChart":{"plotColorPalette":"#FB6A6A"}}}}%%
 xychart-beta
     title "Funds exposed on key compromise (MON, illustrative)"
-    x-axis ["Raw private key", "Blitz session key"]
+    x-axis ["Raw private key", "Castle session key"]
     y-axis "MON at risk" 0 --> 1000
     bar [1000, 10]
 ```
@@ -144,7 +144,7 @@ the key before the next window even opens.
 
 ## System architecture
 
-Blitz is a four-layer system: a Next.js app for humans, an Express API for sessions, a set of
+Castle is a four-layer system: a Next.js app for humans, an Express API for sessions, a set of
 Solidity contracts on Monad, and a Postgres database for off-chain state and monitoring.
 
 ```mermaid
@@ -176,10 +176,10 @@ flowchart TB
     end
 
     subgraph Chain["Monad Testnet - chain 10143"]
-        Factory["BlitzWalletFactory"]
-        Wallet["BlitzWallet<br/>(policy engine)"]
-        Escrow["BlitzEscrow"]
-        Router["BlitzPaymentRouter"]
+        Factory["CastleWalletFactory"]
+        Wallet["CastleWallet<br/>(policy engine)"]
+        Escrow["CastleEscrow"]
+        Router["CastlePaymentRouter"]
     end
 
     Owner --> App
@@ -207,16 +207,16 @@ flowchart TB
 ## The session transaction lifecycle
 
 Every session write goes through the same pipeline: authenticate, validate, detect anomalies,
-optionally ask the human, simulate, then execute and settle. This is the heart of Blitz.
+optionally ask the human, simulate, then execute and settle. This is the heart of Castle.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"primaryColor":"#16161D","primaryTextColor":"#F4F4F5","primaryBorderColor":"#836EF9","lineColor":"#8A8A93","actorTextColor":"#F4F4F5","signalColor":"#8A8A93","signalTextColor":"#F4F4F5"}}}%%
 sequenceDiagram
     participant A as AI Session
-    participant S as Blitz Server
+    participant S as Castle Server
     participant DB as Supabase
     participant T as Telegram (Owner)
-    participant C as BlitzWallet (Monad)
+    participant C as CastleWallet (Monad)
 
     A->>S: POST /api/agent/send (Bearer token)
     S->>DB: Resolve token, decrypt session key
@@ -249,13 +249,13 @@ Four Solidity contracts (`^0.8.24`, built with Foundry) make up the on-chain lay
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"primaryColor":"#16161D","primaryTextColor":"#F4F4F5","primaryBorderColor":"#836EF9","lineColor":"#8A8A93"}}}%%
 classDiagram
-    class BlitzWalletFactory {
+    class CastleWalletFactory {
         +deployWallet() address
         +getWallets(owner) address
         +getAllWallets() address
         +getTotalWalletCount() uint
     }
-    class BlitzWallet {
+    class CastleWallet {
         +address owner
         +mapping sessionKeys
         +registerSessionKey(key, expiry, cap, target, fns)
@@ -264,7 +264,7 @@ classDiagram
         +emergencyWithdraw(to)
         +getSessionPolicy(key)
     }
-    class BlitzEscrow {
+    class CastleEscrow {
         +createTask(specURI, deadline) payable
         +acceptTask(taskId)
         +submitWork(taskId, resultURI)
@@ -272,32 +272,32 @@ classDiagram
         +raiseDispute(taskId)
         +reclaim(taskId)
     }
-    class BlitzPaymentRouter {
+    class CastlePaymentRouter {
         +send(to) payable
         +sendWithMemo(to, memo) payable
     }
-    BlitzWalletFactory --> BlitzWallet : deploys
-    BlitzWallet ..> BlitzPaymentRouter : executeAsAgent
-    BlitzWallet ..> BlitzEscrow : executeAsAgent
+    CastleWalletFactory --> CastleWallet : deploys
+    CastleWallet ..> CastlePaymentRouter : executeAsAgent
+    CastleWallet ..> CastleEscrow : executeAsAgent
 ```
 
 | Contract | Responsibility | Highlights |
 | --- | --- | --- |
-| **BlitzWallet** | AI wallet with an on-chain policy engine | Owner vs session-key separation, per-key expiry, rolling 24h daily cap, single allowed target, function-selector allow-list, `freezeAgent`, `emergencyWithdraw`. Uses the checks-effects-interactions pattern (`spentToday` is incremented before the external call). |
-| **BlitzWalletFactory** | Deploys AI wallets and keeps a registry | One wallet per session, owner-to-wallets mapping, global wallet list and counts. |
-| **BlitzEscrow** | Trustless task exchange between sessions | Funds locked on `createTask`, released on `releaseFunds`, with `accept`, `submit`, `dispute`, and `reclaim` flows and a `Status` lifecycle. |
-| **BlitzPaymentRouter** | Policy-bound native transfers | Acts as the "allowed target" so a session key can forward MON to any recipient, with an optional memo for off-chain indexing. |
+| **CastleWallet** | AI wallet with an on-chain policy engine | Owner vs session-key separation, per-key expiry, rolling 24h daily cap, single allowed target, function-selector allow-list, `freezeAgent`, `emergencyWithdraw`. Uses the checks-effects-interactions pattern (`spentToday` is incremented before the external call). |
+| **CastleWalletFactory** | Deploys AI wallets and keeps a registry | One wallet per session, owner-to-wallets mapping, global wallet list and counts. |
+| **CastleEscrow** | Trustless task exchange between sessions | Funds locked on `createTask`, released on `releaseFunds`, with `accept`, `submit`, `dispute`, and `reclaim` flows and a `Status` lifecycle. |
+| **CastlePaymentRouter** | Policy-bound native transfers | Acts as the "allowed target" so a session key can forward MON to any recipient, with an optional memo for off-chain indexing. |
 
 The policy check inside `executeAsAgent` is the security kernel:
 
 ```solidity
-require(policy.active, "BlitzWallet: key not active");
-require(block.timestamp < policy.expiry, "BlitzWallet: key expired");
-require(target == policy.allowedTarget, "BlitzWallet: unauthorized target");
-require(_isSelectorAllowed(msg.sender, selector), "BlitzWallet: unauthorized function");
+require(policy.active, "CastleWallet: key not active");
+require(block.timestamp < policy.expiry, "CastleWallet: key expired");
+require(target == policy.allowedTarget, "CastleWallet: unauthorized target");
+require(_isSelectorAllowed(msg.sender, selector), "CastleWallet: unauthorized function");
 // rolling 24h window reset, then:
 policy.spentToday += value;
-require(policy.spentToday <= policy.dailyCap, "BlitzWallet: daily cap exceeded");
+require(policy.spentToday <= policy.dailyCap, "CastleWallet: daily cap exceeded");
 ```
 
 ---
@@ -327,7 +327,7 @@ stateDiagram-v2
 
 ## The escrow marketplace
 
-`BlitzEscrow` lets agents transact with each other trustlessly. A buyer locks a reward, a worker
+`CastleEscrow` lets agents transact with each other trustlessly. A buyer locks a reward, a worker
 accepts and delivers, and funds are released on approval.
 
 ```mermaid
@@ -349,7 +349,7 @@ stateDiagram-v2
 
 ## Security model: defense in depth
 
-Blitz layers on-chain guarantees with off-chain monitoring. The chain provides the hard limits
+Castle layers on-chain guarantees with off-chain monitoring. The chain provides the hard limits
 that cannot be bypassed. The server adds early detection, human oversight, and observability.
 
 ```mermaid
@@ -365,7 +365,7 @@ flowchart LR
         L6["Human approval<br/>Telegram threshold"]
         L7["Pre-sign simulation"]
     end
-    subgraph OnChain["On-chain enforcement (BlitzWallet)"]
+    subgraph OnChain["On-chain enforcement (CastleWallet)"]
         direction TB
         C1["Owner / session-key separation"]
         C2["Key expiry"]
@@ -474,7 +474,7 @@ check before broadcasting. A failed simulation returns `400` with a `revertReaso
 
 ```bash
 curl -X POST http://localhost:4000/api/agent/send \
-  -H "Authorization: Bearer blitz_xxxxxxxx" \
+  -H "Authorization: Bearer castle_xxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{ "to": "0xRecipient", "amount": "1.5", "memo": "invoice-42" }'
 ```
@@ -580,7 +580,7 @@ Status reflects what exists in the codebase today.
 ## Project structure
 
 ```
-blitz/
+castle/
 ├── app/                     # Next.js App Router
 │   ├── (marketing)/         # Public landing page
 │   ├── (app)/               # Authenticated product
@@ -602,7 +602,7 @@ blitz/
 │   ├── wallet-meta-store    # Client-side wallet metadata (names, presets)
 │   └── hidden-wallets-store # Soft-delete visibility tracking
 ├── contracts/               # Foundry project
-│   └── src/                 # BlitzWallet, Factory, Escrow, PaymentRouter
+│   └── src/                 # CastleWallet, Factory, Escrow, PaymentRouter
 ├── server/                  # Express session API
 │   └── src/
 │       ├── routes/          # Session + telegram endpoints
@@ -696,9 +696,9 @@ npm run dev            # Frontend on :3000
 1. Open the app, connect your owner wallet, and go to **Create Wallet**.
 2. Pick a preset (Marketplace worker or Payment session) or configure a custom target and selectors.
 3. Set the **daily cap**, **session duration**, and an optional **approval threshold**.
-4. Deploy. Blitz sends two transactions: one to deploy the AI wallet, one to register the session key.
+4. Deploy. Castle sends two transactions: one to deploy the AI wallet, one to register the session key.
 5. Copy the **access token** (shown once) and the generated **system prompt**.
-6. Paste the system prompt into your LLM. It now transacts through the Blitz API, inside your on-chain fence.
+6. Paste the system prompt into your LLM. It now transacts through the Castle API, inside your on-chain fence.
 
 The generated prompt tells the session its identity, API base URL, endpoints, wallet limits, and the
 rule to check `/info` before acting. Everything it does is capped, logged, and revocable.
@@ -707,7 +707,7 @@ rule to check `/info` before acting. Everything it does is capped, logged, and r
 
 ## Design system
 
-Blitz is a **dark-mode-only** product aligned to Monad's identity. The full rules live in
+Castle is a **dark-mode-only** product aligned to Monad's identity. The full rules live in
 [`BRAND.md`](BRAND.md) and [`DESIGN.md`](DESIGN.md).
 
 | Token | Value | Use |
@@ -715,7 +715,7 @@ Blitz is a **dark-mode-only** product aligned to Monad's identity. The full rule
 | `--bg` | `#08080A` | Page canvas (Ink) |
 | `--surface` | `#101015` | Cards and panels |
 | `--text` | `#F4F4F5` | Primary text (Bone) |
-| `--accent` | `#836EF9` | The single accent (Blitz Violet) |
+| `--accent` | `#836EF9` | The single accent (Castle Violet) |
 | `--safe` | `#34D399` | Semantic: funds released, healthy |
 | `--danger` | `#FB6A6A` | Semantic: freeze, abort, expired |
 
@@ -740,7 +740,7 @@ anti-slop ban list. Semantic colors appear only to convey real state.
 
 Released under the MIT License. The smart contracts carry `SPDX-License-Identifier: MIT`.
 
-> Disclaimer: Blitz runs on Monad Testnet and has not been audited. Do not use it with real funds
+> Disclaimer: Castle runs on Monad Testnet and has not been audited. Do not use it with real funds
 > on mainnet until an audit is complete.
 
 <div align="center">

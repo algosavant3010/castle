@@ -1,6 +1,6 @@
-# Blitz - Brand Identity & Template
+# Castle - Brand Identity & Template
 
-> The brand source of truth for Blitz. Colors, type, logo, voice, and usage rules. Blitz is a
+> The brand source of truth for Castle. Colors, type, logo, voice, and usage rules. Castle is a
 > **dark-mode-only** product, matching the Monad platform: off-black canvas, off-white text, one
 > electric violet accent on every screen. Glassmorphism surfaces with generous radii define the
 > visual identity. There is no light theme. This file owns the raw brand values; `DESIGN.md`
@@ -11,11 +11,11 @@
 
 ## 1. Brand Essence
 
-Blitz is the trust layer for the agent economy: it lets AI agents transact on-chain at the
+Castle is the trust layer for the agent economy: it lets AI agents transact on-chain at the
 speed of Monad while a human owner stays in absolute control. The brand has to carry two
 feelings at once.
 
-- **Speed** - lightning, sub-second finality, electric energy. The name Blitz means lightning.
+- **Speed** - lightning, sub-second finality, electric energy. The name Castle means lightning.
 - **Safety** - exact, engineered, in control. A security instrument, not a toy.
 
 Personality: knowledgeable, precise, calm under pressure, fast. We show expertise without
@@ -50,12 +50,12 @@ layer to have visible grid/glow).
 
 | Token | Name | Hex | Use |
 | --- | --- | --- | --- |
-| `--accent` | Blitz Violet | `#836EF9` | The one accent: CTAs, links, the bolt, focus |
-| `--accent-hover` | Blitz Violet Bright | `#9D8BFF` | Hover / focus state |
-| `--accent-press` | Blitz Violet Deep | `#5B45D6` | Pressed / active |
+| `--accent` | Castle Violet | `#836EF9` | The one accent: CTAs, links, the bolt, focus |
+| `--accent-hover` | Castle Violet Bright | `#9D8BFF` | Hover / focus state |
+| `--accent-press` | Castle Violet Deep | `#5B45D6` | Pressed / active |
 | `--accent-soft` | Violet Wash | `rgba(131,110,249,0.12)` | Faint fill behind icons, badges, selected rows |
 
-Blitz Violet is aligned to Monad Purple so Blitz reads as native to the Monad platform. It is a
+Castle Violet is aligned to Monad Purple so Castle reads as native to the Monad platform. It is a
 single flat accent, never a gradient or mesh blob in UI elements (gradients are allowed in
 background atmospheric orbs at very low opacity).
 
@@ -85,7 +85,7 @@ are **never** used as a UI accent.
 
 Charts use a restrained categorical scale built from the accent and neutrals.
 
-1. `#836EF9` (Blitz Violet, primary series)
+1. `#836EF9` (Castle Violet, primary series)
 2. `#9D8BFF` (lighter violet)
 3. `#5B45D6` (deep violet)
 4. `#38bdf8` (sky blue, tertiary)
@@ -147,8 +147,8 @@ Use `--safe` / `--danger` / `--warning` only when the series itself means safe /
 All pairings must meet WCAG AA. Reference ratios on the dark canvas:
 - Bone `#F4F4F5` on Ink `#08080A`: ~18:1 (passes AAA).
 - Ash `#8A8A93` on Ink `#08080A`: ~5.6:1 (passes AA for body and large text).
-- Blitz Violet `#836EF9` on Ink `#08080A`: ~5.2:1 (passes AA for text and UI).
-- Accent buttons use dark `--bg` text on Blitz Violet fill for AA-safe labels.
+- Castle Violet `#836EF9` on Ink `#08080A`: ~5.2:1 (passes AA for text and UI).
+- Accent buttons use dark `--bg` text on Castle Violet fill for AA-safe labels.
 - Smoke `#6B6B77` is for non-essential metadata only and is not used for body text.
 
 ---
@@ -196,7 +196,7 @@ Base font-size: 14px mobile, 16px desktop (set on `<html>`).
 
 ## 4. Logo & Marks
 
-Blitz uses multiple mark variants for different contexts.
+Castle uses multiple mark variants for different contexts.
 
 ### 4.1 The bolt (icon mark)
 
@@ -204,7 +204,7 @@ A single geometric bolt with a slight forward lean (left to right, like a transa
 
 ```svg
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Blitz">
+     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Castle">
   <path d="M18.6 3 L8 17.6 H14.3 L13 29 L24 13.4 H17.5 L18.6 3 Z"
         fill="#836EF9"/>
 </svg>
@@ -214,7 +214,7 @@ Single-stroke variant (for the signing animation and small favicons):
 
 ```svg
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Blitz">
+     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Castle">
   <path d="M18.6 3 L8 17.6 H14.3 L13 29 L24 13.4 H17.5 L18.6 3 Z"
         fill="none" stroke="#836EF9" stroke-width="2"
         stroke-linejoin="round" stroke-linecap="round"/>
@@ -232,22 +232,22 @@ marketing navbar. Rendered via `components/ui/metallic-logo.tsx`.
 A simplified castle/shield SVG mark used in the app topbar for quick recognition at small sizes.
 Rendered via `components/ui/castle-logo.tsx`. The favicon is `castle.svg`.
 
-### 4.4 BlitzIcon (bolt component)
+### 4.4 CastleIcon (bolt component)
 
-A React component (`components/ui/blitz-logo.tsx`) rendering the bolt mark as inline SVG.
+A React component (`components/ui/castle-logo.tsx`) rendering the castle mark as inline SVG.
 Accepts `size` and `color` props. Used on the connect page and footer.
 
 ### 4.5 Wordmark lockup
 
 Mark sits left of the wordmark in both the marketing navbar and app topbar:
-- Marketing: MetallicLogo + "Blitz" text (Geist, 600, -0.03em tracking)
-- App: CastleIcon + "Blitz" text (13-14px, semibold)
+- Marketing: MetallicLogo + "Castle" text (Geist, 600, -0.03em tracking)
+- App: CastleIcon + "Castle" text (13-14px, semibold)
 
 ### 4.6 Color variants (dark only)
-- **Primary**: Blitz Violet bolt + Bone wordmark on Ink. The default everywhere.
+- **Primary**: Castle Violet bolt + Bone wordmark on Ink. The default everywhere.
 - **Mono light**: full Bone (`#F4F4F5`) bolt + wordmark, for busy backgrounds.
-- **Accent fill**: used in `BlitzIcon` component with `color="var(--accent)"`.
-There is no dark-on-light variant because Blitz has no light surfaces.
+- **Accent fill**: used in `CastleIcon` component with `color="var(--accent)"`.
+There is no dark-on-light variant because Castle has no light surfaces.
 
 ### 4.7 Clear space and sizing
 - Clear space on all sides equals the bolt height.
@@ -334,7 +334,7 @@ A one-glance reference for a new screen, doc, or asset.
 
 ```
 THEME      Dark only. Ink #08080A canvas, Bone #F4F4F5 text. No light mode.
-ACCENT     Blitz Violet #836EF9 (Monad-aligned). One accent. No gradients on UI elements.
+ACCENT     Castle Violet #836EF9 (Monad-aligned). One accent. No gradients on UI elements.
 TYPE       Geist (UI) + Geist Mono (data/amounts/addresses). Headlines 600, max 2 lines.
 SHAPE      Smooth rounded. 12-24px radius on cards/interactive. Full-round = pills/chips/nav.
 SURFACE    Glassmorphism: translucent bg + backdrop-blur + hairline border. BorderGlow cards.
@@ -351,11 +351,11 @@ NEVER      Light mode, purple mesh blobs, second accent, em-dashes, heavy shadow
 ## 10. Brand Pre-Flight
 
 - [ ] Dark only. No light surface anywhere.
-- [ ] One accent (Blitz Violet `#836EF9`). No second UI accent.
+- [ ] One accent (Castle Violet `#836EF9`). No second UI accent.
 - [ ] Geist + Geist Mono only. Amounts and addresses in mono.
 - [ ] Smooth rounded shape: 12-24px card radius, full-round for pills/chips.
 - [ ] Glassmorphism surfaces with backdrop-blur and hairline borders.
-- [ ] Logo uses correct variant for context (MetallicLogo, CastleIcon, BlitzIcon, or bolt SVG).
+- [ ] Logo uses correct variant for context (MetallicLogo, CastleIcon, CastleIcon, or bolt SVG).
 - [ ] Semantic colors used only for real state, never decoration.
 - [ ] WCAG AA contrast on dark surfaces holds for all text.
 - [ ] Copy has no em-dashes or en-dashes; tone is exact and calm.

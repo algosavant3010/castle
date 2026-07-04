@@ -47,7 +47,7 @@ export function Navbar() {
             <MetallicLogo size={24} />
           </span>
           <span className="text-base sm:text-lg font-semibold tracking-[-0.03em] text-text">
-            Blitz
+            Castle
           </span>
         </Link>
 

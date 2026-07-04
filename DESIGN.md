@@ -1,7 +1,7 @@
-# Blitz - Design System & UI/UX Spec
+# Castle - Design System & UI/UX Spec
 
-> The taste layer for Blitz. This file is the dominant source of truth for any agent or
-> engineer building Blitz UI. It documents the actual design system as implemented: the color
+> The taste layer for Castle. This file is the dominant source of truth for any agent or
+> engineer building Castle UI. It documents the actual design system as implemented: the color
 > tokens, glassmorphism surface model, smooth rounded shapes, motion vocabulary, component
 > patterns, and page structures. Inspired by Emil Kowalski's motion craft and the
 > taste-skill/impeccable approach to premium dark interfaces.
@@ -12,7 +12,7 @@
 
 One-line read before any code:
 
-**Blitz is secure-autonomy infrastructure for the agent economy. The interface should feel
+**Castle is secure-autonomy infrastructure for the agent economy. The interface should feel
 like a high-precision security terminal with glassmorphic depth, one electric accent, and
 motion that snaps and settles like a real instrument - polished, not clinical.**
 
@@ -25,7 +25,7 @@ motion that snaps and settles like a real instrument - polished, not clinical.**
 
 ## 1. Product Context
 
-Blitz lets AI agents negotiate, work, and pay each other on-chain without ever exposing a
+Castle lets AI agents negotiate, work, and pay each other on-chain without ever exposing a
 human owner's funds to catastrophic risk. Three primitives carry the story:
 
 1. Account abstraction (owner / signer separation)
@@ -43,7 +43,7 @@ should serve one of those two ideas.
 Three rules the build never relaxes.
 
 ### 2.1 Color Consistency Lock
-One accent across the entire app: **Blitz Violet** (`#836EF9`, aligned to Monad Purple). No
+One accent across the entire app: **Castle Violet** (`#836EF9`, aligned to Monad Purple). No
 second accent color. Semantic colors (safe-green, danger-red, warning-amber) appear only to
 convey real state, never as decoration.
 
@@ -53,7 +53,7 @@ Full-round (`9999px`) is reserved for pills, chips, the navbar capsule, and avat
 No sharp/square-cornered cards.
 
 ### 2.3 Page Theme Lock
-**Dark only.** Blitz is a dark-mode product, like the Monad platform. Off-black canvas,
+**Dark only.** Castle is a dark-mode product, like the Monad platform. Off-black canvas,
 off-white text, everywhere, every screen. There is no light theme. Glassmorphism surfaces
 provide depth through translucency, not brightness.
 
@@ -83,7 +83,7 @@ Off-black canvas with translucent surfaces. Never pure `#000` or `#FFF`.
 
 Body background: `#050505` (slightly below `--bg` for the app-bg grid layer to be visible).
 
-Accent discipline: violet is justified here (Monad's identity is purple and Blitz means
+Accent discipline: violet is justified here (Monad's identity is purple and Castle means
 lightning), but it stays a single accent on neutral glass surfaces.
 
 Contrast: every text-on-surface pair must meet WCAG AA. `--text-muted` on `--bg` clears 4.5:1.
@@ -235,7 +235,7 @@ Rules for Environment Layer:
 
 ## 8. Theme: Dark Only
 
-Blitz is dark-mode only, matching the Monad platform. There is no light theme.
+Castle is dark-mode only, matching the Monad platform. There is no light theme.
 - Single canvas: off-black `--bg` with translucent glass surfaces on every screen.
 - Do not build a light variant, a theme toggle, or a one-off light section.
 - All contrast targets (WCAG AA) are met against the dark surfaces in Section 3.
@@ -247,7 +247,7 @@ Blitz is dark-mode only, matching the Monad platform. There is no light theme.
 Multiple mark variants (see BRAND.md Section 4 for full details):
 - **MetallicLogo**: WebGL liquid-metal shader mark. Primary loading state and marketing navbar.
 - **CastleIcon**: Simplified castle SVG. App topbar (20px) and favicon.
-- **BlitzIcon**: Bolt SVG component. Connect page, footer, and brand contexts.
+- **CastleIcon**: Bolt SVG component. Connect page, footer, and brand contexts.
 - **Bolt mark**: The geometric bolt path (Section 9 of BRAND.md). Used in signing animation
   draw-on and as the conceptual brand symbol.
 
@@ -265,7 +265,7 @@ RootLayout (Geist fonts, bg-bg text-text)
 
 ### 10.2 Topbar (app)
 - Sticky, `z-50`, height 48px (mobile) / 56px (desktop).
-- Left: CastleIcon + "Blitz" wordmark (link to /dashboard).
+- Left: CastleIcon + "Castle" wordmark (link to /dashboard).
 - Right (desktop): GooeyNav particle-based navigation with pathname sync.
 - Mobile: fixed bottom bar with 5 icon links (Dashboard, Wallets, Market, Activity, Settings).
 - Background: transparent (glass effect inherited from page).
@@ -295,7 +295,7 @@ Gates app access behind wallet connection. If not connected, redirects to `/conn
 onboarding page with stepper and T&C flow).
 
 ### 10.7 TransactionOverlay
-Global overlay triggered by custom events (`blitz:tx-pending`). Blurs the app with a
+Global overlay triggered by custom events (`castle:tx-pending`). Blurs the app with a
 half-screen prompt directing the user to confirm in MetaMask.
 
 ### 10.8 CastleLoader
@@ -313,12 +313,12 @@ A vertical scroll narrative. Sections: Hero > Partners > How it Works > Safety >
 - Floating pill navbar that shrinks into a centered blurred capsule on scroll.
 - At rest: full-width, transparent, no border.
 - Scrolled: max-w-5xl, rounded-full, backdrop-blur-2xl, hairline border, deep shadow.
-- Left: MetallicLogo + "Blitz" wordmark. Center: nav links (absolutely positioned for true
+- Left: MetallicLogo + "Castle" wordmark. Center: nav links (absolutely positioned for true
   centering). Right: "Get started" accent pill button.
 - Mobile: hamburger that opens a rounded dropdown with backdrop-blur.
 
 ### 11.2 Hero (above the fold)
-The hero showcases a live Shield Visualization demonstrating Blitz catching threats in real-time:
+The hero showcases a live Shield Visualization demonstrating Castle catching threats in real-time:
 - **Background**: LaserFlow (violet accent, CSS-based) + atmospheric gradient orbs
 - **Left column**: Large headline with BlurText entrance, gradient text, RotatingText for
   cycling keywords, ClickSpark interaction
@@ -365,7 +365,7 @@ The most complex animation section:
 - Stats: <1s finality, 10,000+ TPS, ~$0.001 gas, 100% EVM compatible.
 
 ### 11.8 Footer
-- Multi-column layout (5+7 grid): brand column (BlitzIcon, DecryptedText "Blitz", description,
+- Multi-column layout (5+7 grid): brand column (CastleIcon, DecryptedText "Castle", description,
   ShinyText tagline) + three link columns (Product, Resources, Community).
 - TargetCursor effect on hover (crosshair follows mouse, locks to links).
 - Accent glow line at top border.
@@ -418,7 +418,7 @@ The most complex animation section:
 - Danger zone: batch freeze all sessions, batch sweep all wallets.
 
 ### 12.8 Connect (onboarding)
-- Split layout: left = big BlitzIcon + branding (desktop only), right = stepper card.
+- Split layout: left = big CastleIcon + branding (desktop only), right = stepper card.
 - LiquidEther WebGL background (25% opacity).
 - Three-step Stepper: How it works > Safety > Terms acceptance (checkbox gate).
 - After completion: RainbowKit connect modal.
@@ -483,7 +483,7 @@ These are the guardrails that keep the UI premium:
   and radially masked.
 - No hand-rolled decorative SVG illustrations beyond the geometric bolt mark.
 - No skeleton loading screens. Use MetallicLogo (CastleLoader).
-- No second accent color. Everything is Blitz Violet or neutral.
+- No second accent color. Everything is Castle Violet or neutral.
 - No heavy drop shadows. Depth comes from glassmorphism (translucency + blur + border).
 - No light mode or light sections.
 - No inline styles for colors or durations. Consume CSS tokens.
@@ -498,7 +498,7 @@ These are the guardrails that keep the UI premium:
 - ReactBits library: backgrounds, text effects, interactions (AnimatedContent, BorderGlow,
   StarBorder, ClickSpark, Stepper, etc.).
 - All tokens in Section 3 are CSS custom properties mapped to Tailwind via `@theme inline`.
-- The bolt is shipped as multiple components (BlitzIcon, MetallicLogo, CastleIcon) for
+- The bolt is shipped as multiple components (CastleIcon, MetallicLogo, CastleIcon) for
   different contexts.
 - Supabase for data persistence (wallet names, agents, transactions, policies).
 - Wagmi + RainbowKit for wallet connection. Viem for on-chain reads/writes.
@@ -510,7 +510,7 @@ These are the guardrails that keep the UI premium:
 
 Every box must honestly pass before shipping a screen.
 
-- [ ] One accent only across the page (Blitz Violet).
+- [ ] One accent only across the page (Castle Violet).
 - [ ] Smooth rounded shape system (12-24px, full-round for pills).
 - [ ] Dark only, glassmorphism surfaces, no light sections.
 - [ ] All motion uses easing tokens, never linear, and respects reduced-motion.

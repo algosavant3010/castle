@@ -2,22 +2,22 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Script.sol";
-import "../src/BlitzWalletFactory.sol";
-import "../src/BlitzEscrow.sol";
-import "../src/BlitzPaymentRouter.sol";
+import "../src/CastleWalletFactory.sol";
+import "../src/CastleEscrow.sol";
+import "../src/CastlePaymentRouter.sol";
 
-contract DeployBlitz is Script {
+contract DeployCastle is Script {
     function run() external {
         vm.startBroadcast();
 
-        BlitzWalletFactory factory = new BlitzWalletFactory();
-        BlitzEscrow escrow = new BlitzEscrow();
-        BlitzPaymentRouter router = new BlitzPaymentRouter();
+        CastleWalletFactory factory = new CastleWalletFactory();
+        CastleEscrow escrow = new CastleEscrow();
+        CastlePaymentRouter router = new CastlePaymentRouter();
 
         vm.stopBroadcast();
 
-        console.log("BlitzWalletFactory deployed at:", address(factory));
-        console.log("BlitzEscrow deployed at:", address(escrow));
-        console.log("BlitzPaymentRouter deployed at:", address(router));
+        console.log("CastleWalletFactory deployed at:", address(factory));
+        console.log("CastleEscrow deployed at:", address(escrow));
+        console.log("CastlePaymentRouter deployed at:", address(router));
     }
 }

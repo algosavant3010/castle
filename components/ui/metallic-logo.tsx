@@ -9,7 +9,7 @@ interface MetallicLogoProps {
 }
 
 /**
- * Blitz castle logo with a subtle liquid-metal shader effect.
+ * Castle logo with a subtle liquid-metal shader effect.
  * Tuned for brand coherence: violet-dominant, low chromatic aberration,
  * restrained brightness so it reads as a polished emblem rather than
  * a flashy chrome blob. Designed for header/navbar placement.

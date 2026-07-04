@@ -9,18 +9,18 @@ import { CHAIN } from '@/lib/chain/config';
 import { useState } from 'react';
 import { TransactionOverlay } from '@/components/app/transaction-overlay';
 
-// Custom Blitz dark theme for RainbowKit
-const blitzTheme = darkTheme({
+// Custom Castle dark theme for RainbowKit
+const castleTheme = darkTheme({
   accentColor: '#836EF9',
   accentColorForeground: '#F4F4F5',
   borderRadius: 'small',
   overlayBlur: 'small',
 });
 
-// Override modal backgrounds to match Blitz tokens
-blitzTheme.colors.modalBackground = '#101015';
-blitzTheme.colors.profileForeground = '#101015';
-blitzTheme.colors.connectButtonBackground = '#101015';
+// Override modal backgrounds to match Castle tokens
+castleTheme.colors.modalBackground = '#101015';
+castleTheme.colors.profileForeground = '#101015';
+castleTheme.colors.connectButtonBackground = '#101015';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   // Create QueryClient in state to avoid shared instance across requests
@@ -40,7 +40,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={blitzTheme} initialChain={CHAIN}>
+        <RainbowKitProvider theme={castleTheme} initialChain={CHAIN}>
             <TransactionOverlay />
             {children}
         </RainbowKitProvider>

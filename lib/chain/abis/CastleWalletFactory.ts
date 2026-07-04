@@ -1,4 +1,4 @@
-export const BlitzWalletFactoryABI = [
+export const CastleWalletFactoryABI = [
   {
     type: "function",
     name: "deployWallet",

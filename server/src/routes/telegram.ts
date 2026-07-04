@@ -78,9 +78,9 @@ export async function handleTelegramUpdate(update: Record<string, unknown>): Pro
     case '/start':
       await sendTelegramAlert(chatId,
         `👋 Welcome${username ? `, @${username}` : ''}!\n\n` +
-        `This is <b>BlitzConnect</b> — alerts & approval controls for your AI agents.\n\n` +
+        `This is <b>CastleConnect</b> — alerts & approval controls for your AI agents.\n\n` +
         `Your Chat ID: <code>${chatId}</code>\n\n` +
-        `Paste this in Blitz app settings to link.`
+        `Paste this in Castle app settings to link.`
       );
       break;
     case '/id':
@@ -92,7 +92,7 @@ export async function handleTelegramUpdate(update: Record<string, unknown>): Pro
         const { count } = await supabase.from('pending_approvals').select('*', { count: 'exact', head: true }).eq('owner_address', d.owner_address.toLowerCase()).eq('status', 'pending');
         await sendTelegramAlert(chatId, `✅ Linked to: <code>${d.owner_address.slice(0, 10)}...</code>\nPending: ${count || 0}`);
       } else {
-        await sendTelegramAlert(chatId, 'Not linked. Add Chat ID in Blitz settings.');
+        await sendTelegramAlert(chatId, 'Not linked. Add Chat ID in Castle settings.');
       }
       break;
     }
@@ -139,7 +139,7 @@ router.post('/verify', ownerAuth('link-telegram'), async (req: Request, res: Res
 
   const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
   await supabase.from('telegram_otps').insert({ chat_id: chatId, code: otpCode, owner_address: owner, expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString() });
-  const sent = await sendTelegramAlert(chatId, `Blitz code: <code>${otpCode}</code>\nExpires in 5 min.`);
+  const sent = await sendTelegramAlert(chatId, `Castle code: <code>${otpCode}</code>\nExpires in 5 min.`);
   if (!sent) return res.status(400).json({ error: 'Could not reach Chat ID.' });
   res.json({ success: true, codeSent: true });
 });

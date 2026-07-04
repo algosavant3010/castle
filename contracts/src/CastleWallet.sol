@@ -2,13 +2,13 @@
 pragma solidity ^0.8.24;
 
 /**
- * @title BlitzWallet
+ * @title CastleWallet
  * @notice A smart contract wallet that separates the human owner (Master Key) from
  *         AI agent signers (Session Keys) with on-chain policy enforcement.
  * @dev Session keys can only execute transactions within their policy bounds.
  *      The owner retains full control and can freeze/withdraw at any time.
  */
-contract BlitzWallet {
+contract CastleWallet {
     // --- Types ---
     struct SessionPolicy {
         uint256 expiry;          // Unix timestamp after which the key is invalid
@@ -36,13 +36,13 @@ contract BlitzWallet {
 
     // --- Modifiers ---
     modifier onlyOwner() {
-        require(msg.sender == owner, "BlitzWallet: not owner");
+        require(msg.sender == owner, "CastleWallet: not owner");
         _;
     }
 
     // --- Constructor ---
     constructor(address _owner) {
-        require(_owner != address(0), "BlitzWallet: zero owner");
+        require(_owner != address(0), "CastleWallet: zero owner");
         owner = _owner;
     }
 
@@ -66,10 +66,10 @@ contract BlitzWallet {
         address allowedTarget,
         bytes4[] calldata allowedFns
     ) external onlyOwner {
-        require(key != address(0), "BlitzWallet: zero key");
-        require(expiry > block.timestamp, "BlitzWallet: expiry in past");
-        require(allowedTarget != address(0), "BlitzWallet: zero target");
-        require(!sessionKeys[key].active, "BlitzWallet: key already active");
+        require(key != address(0), "CastleWallet: zero key");
+        require(expiry > block.timestamp, "CastleWallet: expiry in past");
+        require(allowedTarget != address(0), "CastleWallet: zero target");
+        require(!sessionKeys[key].active, "CastleWallet: key already active");
 
         sessionKeys[key] = SessionPolicy({
             expiry: expiry,
@@ -97,7 +97,7 @@ contract BlitzWallet {
      * @param key The address of the session key to revoke
      */
     function revokeSessionKey(address key) external onlyOwner {
-        require(sessionKeys[key].active, "BlitzWallet: key not active");
+        require(sessionKeys[key].active, "CastleWallet: key not active");
         sessionKeys[key].active = false;
 
         // Remove from activeKeys array
@@ -130,12 +130,12 @@ contract BlitzWallet {
      * @param to The address to receive the funds (typically the owner's EOA)
      */
     function emergencyWithdraw(address to) external onlyOwner {
-        require(to != address(0), "BlitzWallet: zero recipient");
+        require(to != address(0), "CastleWallet: zero recipient");
         uint256 amount = address(this).balance;
-        require(amount > 0, "BlitzWallet: no balance");
+        require(amount > 0, "CastleWallet: no balance");
 
         (bool success, ) = to.call{value: amount}("");
-        require(success, "BlitzWallet: transfer failed");
+        require(success, "CastleWallet: transfer failed");
 
         emit EmergencyWithdrawal(to, amount);
     }
@@ -157,13 +157,13 @@ contract BlitzWallet {
         SessionPolicy storage policy = sessionKeys[msg.sender];
 
         // --- CHECKS ---
-        require(policy.active, "BlitzWallet: key not active");
-        require(block.timestamp < policy.expiry, "BlitzWallet: key expired");
-        require(target == policy.allowedTarget, "BlitzWallet: unauthorized target");
+        require(policy.active, "CastleWallet: key not active");
+        require(block.timestamp < policy.expiry, "CastleWallet: key expired");
+        require(target == policy.allowedTarget, "CastleWallet: unauthorized target");
 
         // Validate function selector
         bytes4 selector = bytes4(data[:4]);
-        require(_isSelectorAllowed(msg.sender, selector), "BlitzWallet: unauthorized function");
+        require(_isSelectorAllowed(msg.sender, selector), "CastleWallet: unauthorized function");
 
         // Reset rolling window if 24h has passed
         if (block.timestamp >= policy.windowStart + 24 hours) {
@@ -173,11 +173,11 @@ contract BlitzWallet {
 
         // --- EFFECTS (before external call - CEI pattern) ---
         policy.spentToday += value;
-        require(policy.spentToday <= policy.dailyCap, "BlitzWallet: daily cap exceeded");
+        require(policy.spentToday <= policy.dailyCap, "CastleWallet: daily cap exceeded");
 
         // --- INTERACTIONS ---
         (bool success, bytes memory result) = target.call{value: value}(data);
-        require(success, "BlitzWallet: execution failed");
+        require(success, "CastleWallet: execution failed");
 
         emit AgentExecution(msg.sender, target, value, selector);
 

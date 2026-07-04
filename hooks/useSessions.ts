@@ -1,14 +1,14 @@
 "use client";
 
 import { useReadContract } from 'wagmi';
-import { BlitzWalletABI } from '@/lib/chain/abis';
+import { CastleWalletABI } from '@/lib/chain/abis';
 
 export type SessionStatus = 'active' | 'expiring' | 'frozen' | 'expired';
 
 export function useActiveKeys(walletAddress: `0x${string}` | undefined) {
   return useReadContract({
     address: walletAddress,
-    abi: BlitzWalletABI,
+    abi: CastleWalletABI,
     functionName: 'getActiveKeys',
     query: { enabled: !!walletAddress },
   });
@@ -17,7 +17,7 @@ export function useActiveKeys(walletAddress: `0x${string}` | undefined) {
 export function useSessionPolicy(walletAddress: `0x${string}` | undefined, keyAddress: `0x${string}` | undefined) {
   return useReadContract({
     address: walletAddress,
-    abi: BlitzWalletABI,
+    abi: CastleWalletABI,
     functionName: 'getSessionPolicy',
     args: keyAddress ? [keyAddress] : undefined,
     query: { enabled: !!walletAddress && !!keyAddress },

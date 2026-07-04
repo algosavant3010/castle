@@ -28,8 +28,8 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
   const token = authHeader.slice(7).trim();
 
   try {
-    // New format: blitz_<hex>
-    if (token.startsWith('blitz_')) {
+    // New format: castle_<hex>
+    if (token.startsWith('castle_')) {
       const tokenHash = hashToken(token);
       const { data: agent, error } = await supabase
         .from('agents')

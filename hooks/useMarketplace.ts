@@ -1,7 +1,7 @@
 "use client";
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
-import { BlitzEscrowABI } from '@/lib/chain/abis';
+import { CastleEscrowABI } from '@/lib/chain/abis';
 import { CONTRACTS } from '@/lib/chain/addresses';
 import { parseEther } from 'viem';
 
@@ -24,7 +24,7 @@ const STATUS_MAP: TaskStatus[] = ['Open', 'Accepted', 'Submitted', 'Released', '
 export function useTaskCount() {
   return useReadContract({
     address: CONTRACTS.escrow,
-    abi: BlitzEscrowABI,
+    abi: CastleEscrowABI,
     functionName: 'taskCount',
     query: { enabled: CONTRACTS.escrow !== '0x0000000000000000000000000000000000000000' },
   });
@@ -33,7 +33,7 @@ export function useTaskCount() {
 export function useTask(taskId: number) {
   const { data, isLoading } = useReadContract({
     address: CONTRACTS.escrow,
-    abi: BlitzEscrowABI,
+    abi: CastleEscrowABI,
     functionName: 'getTask',
     args: [BigInt(taskId)],
     query: { enabled: CONTRACTS.escrow !== '0x0000000000000000000000000000000000000000' },
@@ -68,7 +68,7 @@ export function useCreateTask() {
     const deadline = BigInt(Math.floor(Date.now() / 1000) + deadlineHours * 3600);
     writeContract({
       address: CONTRACTS.escrow,
-      abi: BlitzEscrowABI,
+      abi: CastleEscrowABI,
       functionName: 'createTask',
       args: [specURI, deadline],
       value: parseEther(rewardMon),
@@ -85,7 +85,7 @@ export function useReleaseFunds() {
   const release = (taskId: number) => {
     writeContract({
       address: CONTRACTS.escrow,
-      abi: BlitzEscrowABI,
+      abi: CastleEscrowABI,
       functionName: 'releaseFunds',
       args: [BigInt(taskId)],
     });

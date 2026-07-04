@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { BlitzWalletFactoryABI } from '@/lib/chain/abis';
+import { CastleWalletFactoryABI } from '@/lib/chain/abis';
 import { CONTRACTS } from '@/lib/chain/addresses';
 import { showTxOverlay, hideTxOverlay } from "@/components/app/transaction-overlay";
 
@@ -18,7 +18,7 @@ export function useDeployWallet() {
   const deploy = () => {
     writeContract({
       address: CONTRACTS.factory,
-      abi: BlitzWalletFactoryABI,
+      abi: CastleWalletFactoryABI,
       functionName: 'deployWallet',
     });
   };

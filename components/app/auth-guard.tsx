@@ -82,7 +82,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
           <div className="glass-strong p-8 text-center max-w-sm">
             <p className="text-lg font-semibold text-text">Wrong Network</p>
             <p className="mt-2 text-sm text-muted">
-              Blitz requires Monad Testnet (Chain ID: {MONAD_TESTNET_ID}).
+              Castle requires Monad Testnet (Chain ID: {MONAD_TESTNET_ID}).
             </p>
             <p className="mt-1 text-sm text-muted">
               Please switch your wallet to Monad Testnet.

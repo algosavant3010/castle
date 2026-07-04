@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { BlitzWalletABI } from '@/lib/chain/abis';
+import { CastleWalletABI } from '@/lib/chain/abis';
 import { showTxOverlay, hideTxOverlay } from "@/components/app/transaction-overlay";
 import { clearSessionActivity } from "@/lib/activity-store";
 import { removeWalletMeta } from "@/lib/wallet-meta-store";
@@ -30,7 +30,7 @@ export function useRevokeSession(walletAddress: `0x${string}`) {
     pendingKeyRef.current = key;
     writeContract({
       address: walletAddress,
-      abi: BlitzWalletABI,
+      abi: CastleWalletABI,
       functionName: 'revokeSessionKey',
       args: [key],
     });

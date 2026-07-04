@@ -74,7 +74,7 @@ export default function DashboardPage() {
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-semibold text-text">Welcome to Blitz</h1>
+            <h1 className="text-2xl font-semibold text-text">Welcome to Castle</h1>
             <p className="mt-3 text-sm text-muted leading-relaxed max-w-sm mx-auto">
               Deploy your first AI Wallet to start delegating on-chain actions with time-boxed session keys and spend limits.
             </p>

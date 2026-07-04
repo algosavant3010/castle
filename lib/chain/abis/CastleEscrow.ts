@@ -1,4 +1,4 @@
-export const BlitzEscrowABI = [
+export const CastleEscrowABI = [
   {
     type: "function",
     name: "taskCount",

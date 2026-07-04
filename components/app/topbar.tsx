@@ -18,7 +18,7 @@ export function Topbar() {
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center gap-2 shrink-0 transition-opacity hover:opacity-80">
         <CastleIcon size={20} />
-        <span className="text-[13px] md:text-sm font-semibold tracking-tight text-text/90">Blitz</span>
+        <span className="text-[13px] md:text-sm font-semibold tracking-tight text-text/90">Castle</span>
       </Link>
 
       {/* Right-aligned nav using GooeyNav */}

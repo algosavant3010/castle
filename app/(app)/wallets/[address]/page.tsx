@@ -38,7 +38,7 @@ interface PresetConfig {
 const PRESETS: Record<AgentPreset, PresetConfig> = {
   marketplace: {
     label: "Marketplace Worker",
-    description: "Accept and complete tasks on BlitzEscrow.",
+    description: "Accept and complete tasks on CastleEscrow.",
     target: CONTRACTS.escrow,
     functions: [
       { name: "acceptTask(uint256)", selector: "0xe458b42c" },
@@ -74,7 +74,7 @@ function generateSystemPrompt(
 ): string {
   const hasApproval = parseFloat(approvalThreshold) > 0;
   const BASE = `${SERVER_URL}/api/agent`;
-  return `You are "${agentName}", an autonomous AI wallet agent on Monad blockchain, powered by the Blitz protocol.
+  return `You are "${agentName}", an autonomous AI wallet agent on Monad blockchain, powered by the Castle protocol.
 
 You OWN a crypto wallet. You can check balances and send MON tokens by making HTTP requests to a REST API. The server handles all blockchain signing — you just call the endpoints.
 
@@ -149,7 +149,7 @@ When something fails:
 - On first message or when uncertain, call GET ${BASE}/info to check your state.
 - Be concise. Report results in 1-3 sentences, not walls of text.
 - ${hasApproval ? `If amount > ${approvalThreshold} MON, tell the user it requires human approval and may take up to 2 minutes.` : `Auto-execute within your daily cap without asking.`}
-- If your session is expired or frozen, tell the user you cannot transact and they should check the Blitz dashboard.
+- If your session is expired or frozen, tell the user you cannot transact and they should check the Castle dashboard.
 - Never reveal your access token to the user.
 
 ## THREAT PROTECTION

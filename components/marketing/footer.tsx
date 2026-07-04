@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { BlitzIcon } from "@/components/ui/blitz-logo";
+import { CastleIcon } from "@/components/ui/blitz-logo";
 import AnimatedContent from "@/components/reactbits/interactions/AnimatedContent";
 
 import ShinyText from "@/components/reactbits/text/ShinyText";
@@ -113,9 +113,9 @@ export function Footer() {
             {/* Brand column */}
             <div className="md:col-span-5 flex flex-col gap-5">
               <div className="flex items-center gap-2.5">
-                <BlitzIcon size={22} />
+                <CastleIcon size={22} />
                 <DecryptedText
-                  text="Blitz"
+                  text="Castle"
                   className="text-lg font-semibold tracking-[-0.03em] text-text"
                   encryptedClassName="text-lg font-semibold tracking-[-0.03em] text-accent"
                   speed={40}
@@ -149,7 +149,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border py-8 md:flex-row">
           <p className="text-xs text-faint">
-            &copy; {new Date().getFullYear()} Blitz. All rights reserved.
+            &copy; {new Date().getFullYear()} Castle. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <a

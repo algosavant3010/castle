@@ -1,6 +1,6 @@
 import { publicClient } from './chain.js';
 import { encodeFunctionData, formatEther } from 'viem';
-import { BlitzWalletABI } from '../abis/BlitzWallet.js';
+import { CastleWalletABI } from '../abis/CastleWallet.js';
 
 export interface SimulationResult {
   success: boolean;
@@ -32,7 +32,7 @@ export async function simulateAgentTransaction(params: {
     // 2. Check policy
     const policy = await publicClient.readContract({
       address: params.vaultAddress,
-      abi: BlitzWalletABI,
+      abi: CastleWalletABI,
       functionName: 'getSessionPolicy',
       args: [params.agentAddress],
     }) as [bigint, bigint, bigint, bigint, `0x${string}`, `0x${string}`[], boolean];
@@ -52,7 +52,7 @@ export async function simulateAgentTransaction(params: {
 
     // 3. Simulate via eth_call
     const executeData = encodeFunctionData({
-      abi: BlitzWalletABI,
+      abi: CastleWalletABI,
       functionName: 'executeAsAgent',
       args: [params.target, params.value, params.calldata],
     });

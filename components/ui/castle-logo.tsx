@@ -6,7 +6,7 @@ interface CastleIconProps {
   color?: string;
 }
 
-/** Static castle icon mark — the Blitz brand. */
+/** Static castle icon mark — the Castle brand. */
 export function CastleIcon({
   size = 28,
   className = "",
@@ -20,7 +20,7 @@ export function CastleIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Blitz"
+      aria-label="Castle"
       className={className}
     >
       <path
@@ -36,7 +36,7 @@ interface CastleLogoProps {
   className?: string;
 }
 
-/** Full lockup: castle icon + "Blitz" wordmark */
+/** Full lockup: castle icon + "Castle" wordmark */
 export function CastleLogo({
   iconSize = 24,
   className = "",
@@ -45,7 +45,7 @@ export function CastleLogo({
     <div className={`flex items-center gap-2 ${className}`}>
       <CastleIcon size={iconSize} />
       <span className="text-lg font-semibold tracking-[-0.03em] text-text">
-        Blitz
+        Castle
       </span>
     </div>
   );

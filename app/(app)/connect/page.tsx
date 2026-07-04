@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { BlitzIcon } from "@/components/ui/blitz-logo";
+import { CastleIcon } from "@/components/ui/blitz-logo";
 import { StatusIcon } from "@/components/app/status-icon";
 import AnimatedContent from "@/components/reactbits/interactions/AnimatedContent";
 import Stepper, { Step } from "@/components/reactbits/interactions/Stepper";
@@ -64,9 +64,9 @@ export default function ConnectPage() {
           threshold={0.1}
         >
           <div className="flex flex-col items-center gap-6 px-12">
-            <BlitzIcon size={96} color="var(--accent)" />
+            <CastleIcon size={96} color="var(--accent)" />
             <h1 className="text-4xl font-bold tracking-tight text-text">
-              Blitz
+              Castle
             </h1>
             <p className="max-w-xs text-center text-base text-muted leading-relaxed">
               Secure autonomy for the agent economy on Monad.
@@ -92,9 +92,9 @@ export default function ConnectPage() {
             className="lg:hidden"
           >
             <div className="flex flex-col items-center gap-3 mb-4">
-              <BlitzIcon size={48} />
+              <CastleIcon size={48} />
               <h1 className="text-xl font-semibold text-text">
-                Welcome to Blitz
+                Welcome to Castle
               </h1>
             </div>
           </AnimatedContent>
@@ -109,7 +109,7 @@ export default function ConnectPage() {
           >
             <div className="hidden lg:block">
               <h2 className="text-xl font-semibold text-text">
-                Welcome to Blitz
+                Welcome to Castle
               </h2>
               <p className="mt-1 text-sm text-muted">
                 Before you connect, here is what you need to know.
@@ -143,11 +143,11 @@ export default function ConnectPage() {
                     : {}
                 }
               >
-                {/* Step 1: What is Blitz + How it works (merged) */}
+                {/* Step 1: What is Castle + How it works (merged) */}
                 <Step>
                   <div className="space-y-4 pb-2">
                     <h2 className="text-base font-medium text-text">
-                      How Blitz works
+                      How Castle works
                     </h2>
                     <ul className="space-y-2.5 text-sm text-muted">
                       <li className="flex items-start gap-2">
@@ -233,7 +233,7 @@ export default function ConnectPage() {
               /* After stepper completes: show wallet connect */
               <div className="rounded-sm border border-border bg-surface/95 p-8 backdrop-blur-sm">
                 <p className="mb-5 text-center text-sm text-muted">
-                  You are all set. Connect your wallet to enter Blitz.
+                  You are all set. Connect your wallet to enter Castle.
                 </p>
 
                 <ConnectButton.Custom>
@@ -249,7 +249,7 @@ export default function ConnectPage() {
                 </ConnectButton.Custom>
 
                 <p className="mt-4 text-center text-xs text-faint">
-                  Blitz requires Monad Testnet. Your wallet will be prompted to
+                  Castle requires Monad Testnet. Your wallet will be prompted to
                   add and switch to it.
                 </p>
               </div>

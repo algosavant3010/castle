@@ -25,7 +25,7 @@ export interface OwnerAuthResult {
  */
 export function buildAuthMessage(purpose: string, address: string, timestamp: number): string {
   return [
-    'Blitz Security',
+    'Castle Security',
     `Purpose: ${purpose}`,
     `Wallet: ${address.toLowerCase()}`,
     `Time: ${timestamp}`,

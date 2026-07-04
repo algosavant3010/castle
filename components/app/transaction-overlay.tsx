@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
  * Blurs the app and shows a prompt on the left side of the screen.
  * 
  * Uses a global event system — any component can trigger it via:
- *   window.dispatchEvent(new CustomEvent('blitz:tx-pending', { detail: true }))
- *   window.dispatchEvent(new CustomEvent('blitz:tx-pending', { detail: false }))
+ *   window.dispatchEvent(new CustomEvent('castle:tx-pending', { detail: true }))
+ *   window.dispatchEvent(new CustomEvent('castle:tx-pending', { detail: false }))
  */
 export function TransactionOverlay() {
   const [visible, setVisible] = useState(false);
@@ -18,8 +18,8 @@ export function TransactionOverlay() {
       const detail = (e as CustomEvent).detail;
       setVisible(!!detail);
     };
-    window.addEventListener("blitz:tx-pending", handler);
-    return () => window.removeEventListener("blitz:tx-pending", handler);
+    window.addEventListener("castle:tx-pending", handler);
+    return () => window.removeEventListener("castle:tx-pending", handler);
   }, []);
 
   if (!visible) return null;
@@ -59,12 +59,12 @@ export function TransactionOverlay() {
  */
 export function showTxOverlay() {
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent("blitz:tx-pending", { detail: true }));
+    window.dispatchEvent(new CustomEvent("castle:tx-pending", { detail: true }));
   }
 }
 
 export function hideTxOverlay() {
   if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent("blitz:tx-pending", { detail: false }));
+    window.dispatchEvent(new CustomEvent("castle:tx-pending", { detail: false }));
   }
 }

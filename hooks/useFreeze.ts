@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { BlitzWalletABI } from '@/lib/chain/abis';
+import { CastleWalletABI } from '@/lib/chain/abis';
 import { showTxOverlay, hideTxOverlay } from "@/components/app/transaction-overlay";
 import { clearWalletActivity } from "@/lib/activity-store";
 
@@ -25,7 +25,7 @@ export function useFreeze(vaultAddress: `0x${string}`) {
   const freeze = () => {
     writeContract({
       address: vaultAddress,
-      abi: BlitzWalletABI,
+      abi: CastleWalletABI,
       functionName: 'freezeAgent',
     });
   };

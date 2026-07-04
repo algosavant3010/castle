@@ -5,7 +5,7 @@ import { agentRateLimiter } from '../middleware/rate-limit.js';
 import { checkNewIp } from '../middleware/ip-monitor.js';
 import { logRequest } from '../middleware/logger.js';
 import { publicClient } from '../services/chain.js';
-import { BlitzWalletABI } from '../abis/BlitzWallet.js';
+import { CastleWalletABI } from '../abis/CastleWallet.js';
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.get('/', authMiddleware, agentRateLimiter, async (req: Request, res: Resp
 
     const balance = await publicClient.getBalance({ address: creds.vaultAddress });
     const policy = await publicClient.readContract({
-      address: creds.vaultAddress, abi: BlitzWalletABI,
+      address: creds.vaultAddress, abi: CastleWalletABI,
       functionName: 'getSessionPolicy', args: [creds.agentAddress],
     }) as [bigint, bigint, bigint, bigint, `0x${string}`, `0x${string}`[], boolean];
 

@@ -11,7 +11,7 @@ import { supabase } from '../services/supabase.js';
 import { alertOnCall, sendTelegramAlert } from '../services/telegram.js';
 import { needsApproval, requestApproval, getAgentName } from '../services/approval.js';
 import { analyzeContractCall, buildThreatAlert } from '../services/threat-analysis.js';
-import { BlitzWalletABI } from '../abis/BlitzWallet.js';
+import { CastleWalletABI } from '../abis/CastleWallet.js';
 
 const router = Router();
 
@@ -35,7 +35,7 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
   const pattern = await checkSigningPattern(creds.agentAddress, creds.ownerAddress, target, functionName, valueMon);
   if (pattern.blocked) { res.status(429).json({ error: pattern.reason }); logRequest(req, res, Date.now() - start); return; }
 
-  // --- THREAT ANALYSIS (for non-Blitz contracts) ---
+  // --- THREAT ANALYSIS (for non-Castle contracts) ---
   const calldata = encodeFunctionData({ abi, functionName, args: (args || []) as readonly unknown[] });
 
   const threat = analyzeContractCall({
@@ -121,10 +121,10 @@ router.post('/', authMiddleware, agentRateLimiter, async (req: Request, res: Res
       ip_address: req.clientMeta?.ip, origin: req.clientMeta?.origin,
     });
 
-    // Execute directly on-chain (policy enforced by BlitzWallet contract)
+    // Execute directly on-chain (policy enforced by CastleWallet contract)
     const walletClient = createAgentWalletClient(creds.privateKey);
     const hash = await walletClient.writeContract({
-      address: creds.vaultAddress, abi: BlitzWalletABI, functionName: 'executeAsAgent',
+      address: creds.vaultAddress, abi: CastleWalletABI, functionName: 'executeAsAgent',
       args: [target as `0x${string}`, txValue, calldata as `0x${string}`],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
