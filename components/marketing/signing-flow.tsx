@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -10,12 +9,6 @@ import { useGSAP } from "@gsap/react";
 import RotatingText from "@/components/reactbits/text/RotatingText";
 import StarBorder from "@/components/reactbits/interactions/StarBorder";
 import FadeContent from "@/components/reactbits/interactions/FadeContent";
-
-// React Bits - backgrounds
-const Lightning = dynamic(
-  () => import("@/components/reactbits/backgrounds/Lightning"),
-  { ssr: false }
-);
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -39,31 +32,12 @@ const STEPS = [
 
 export function SigningFlow() {
   const sectionRef = useRef<HTMLElement>(null);
-  const boltRef = useRef<SVGPathElement>(null);
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // Bolt draw-on tied to scroll
-        if (boltRef.current) {
-          const length = boltRef.current.getTotalLength?.() || 100;
-          gsap.set(boltRef.current, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
-          });
-          gsap.to(boltRef.current, {
-            strokeDashoffset: 0,
-            duration: 1,
-            ease: "expo.out",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top 40%",
-              end: "center center",
-              scrub: 1,
-            },
-          });
-        }
+        // No bolt animation needed
       });
     },
     { scope: sectionRef }
@@ -74,10 +48,7 @@ export function SigningFlow() {
       ref={sectionRef}
       className="relative mx-auto max-w-[1200px] overflow-hidden px-6 py-24 md:px-12 md:py-32"
     >
-      {/* Lightning background */}
-      <div className="pointer-events-none absolute inset-0 z-0 opacity-30 motion-reduce:opacity-0">
-        <Lightning hue={270} speed={0.8} intensity={0.7} size={1.2} />
-      </div>
+      {/* Lightning background - REMOVED */}
 
       <div className="relative z-10">
       <div className="mb-12">
@@ -98,7 +69,7 @@ export function SigningFlow() {
         </h2>
       </div>
 
-      <div className="grid gap-12 md:grid-cols-[1fr_auto_1fr] md:items-start">
+      <div className="grid gap-12 md:grid-cols-2 md:items-start">
         {/* Steps column */}
         <div className="space-y-4">
           {STEPS.map((step, i) => (
@@ -135,26 +106,8 @@ export function SigningFlow() {
           </div>
         </div>
 
-        {/* Center: bolt draw-on SVG */}
-        <div className="hidden items-center justify-center md:flex">
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 32 32"
-            fill="none"
-            className="text-accent"
-          >
-            <path
-              ref={boltRef}
-              d="M18.6 3 L8 17.6 H14.3 L13 29 L24 13.4 H17.5 L18.6 3 Z"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
+        {/* Center spacer (bolt removed) */}
+        <div className="hidden md:block" />
 
         {/* Right: description panel */}
         <div className="hidden md:block">
